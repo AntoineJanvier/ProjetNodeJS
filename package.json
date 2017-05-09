@@ -1,0 +1,25 @@
+{
+  "name": "projetnodejs",
+  "version": "1.0.0",
+  "description": "Projet NodeJS for ESGI (librarizeMe)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntoineJanvier/ProjetNodeJS.git"
+  },
+  "author": "AntoineJanvier&DamienChaudois",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/AntoineJanvier/ProjetNodeJS/issues"
+  },
+  "homepage": "https://github.com/AntoineJanvier/ProjetNodeJS#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "pug": "^2.0.0-rc.1",
+    "sequelize": "^3.30.4"
+  }
+}
