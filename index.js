@@ -36,26 +36,26 @@ app.use(cookieParser());
 /**
  * Database connection
  */
-let sequelize = new Sequelize('nodejs_project_development', 'root', 'root', {
-    host: 'localhost',
-    dialect: 'mysql',
-    pool: {
-        max: 5,
-        min: 0,
-        idle: 10000
-    }
-});
+// let sequelize = new Sequelize('nodejs_project_development', 'root', 'root', {
+//     host: 'localhost',
+//     dialect: 'mysql',
+//     pool: {
+//         max: 5,
+//         min: 0,
+//         idle: 10000
+//     }
+// });
 
 /**
  * Test the connection to the database
  */
-sequelize.authenticate()
-    .then(function() {
-        console.log('Connection has been established successfully.');
-    })
-    .catch(function (err) {
-        console.log('Unable to connect to the database:', err);
-    });
+// sequelize.authenticate()
+//     .then(function() {
+//         console.log('Connection has been established successfully.');
+//     })
+//     .catch(function (err) {
+//         console.log('Unable to connect to the database:', err);
+//     });
 
 /**
  * Routes

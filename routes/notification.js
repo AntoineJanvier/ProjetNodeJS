@@ -1,12 +1,15 @@
 'use strict';
 
-module.exports = function (app) {
-    app.get('/list', function (req, res) {
-        res.type('text');
-        res.send('/list');
-    });
-    app.get('/edit', function (req, res) {
-        res.type('text');
-        res.send('/edit');
-    });
-};
+let express = require('express');
+let router = express.Router();
+
+router.get('/list', function (req, res) {
+    res.type('html');
+    res.render('index', { title: '/list' });
+});
+router.get('/edit', function (req, res) {
+    res.type('html');
+    res.render('index', { title: '/edit' });
+});
+
+module.exports = router;

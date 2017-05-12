@@ -1,35 +1,48 @@
 'use strict';
 
-const User = require('../models/User');
+let express = require('express');
+let router = express.Router();
 
-module.exports = function (app) {
-    app.get('/edit', function (req, res) {
-        res.type('text');
-        res.send('/edit');
-    });
+const models = require('../models');
+const User = models.User;
 
-    app.get('/get/:id', function (req, res) {
-        res.type('json');
+router.get('/edit/:id', function (req, res) {
+    res.type('html');
 
-        let id = parseInt(req.params.id) || 0;
-        let options = {
-            id: id,
-        };
-        User.findAll(options).then(function (users) {
-            let r = [];
-            for(let u of users)
-                r.push(u.responsify());
-            res.json(r);
-        }).catch(function (err) {
-            res.json({
-                result: -1,
-                err: err
-            });
+    let id = parseInt(req.params.id) || 0;
+    let options = {
+        id: id,
+    };
+    User.find(options).then(function (user) {
+        res.render('index', { title: '/edit/' + user.id + ' = ' + user.first_name });
+    }).catch(function (err) {
+        res.json({
+            result: "User not found",
+            err: err
         });
     });
+});
 
-    app.get('/contact_us', function (req, res) {
-        res.type('text');
-        res.send('/contact_us');
+router.get('/get/:id', function (req, res) {
+    res.type('html');
+
+    let id = parseInt(req.params.id) || 0;
+    let options = {
+        id: id,
+    };
+    User.find(options).then(function (user) {
+        res.render('index', { title: '/get/' + user.id + ' = ' + user.first_name });
+    }).catch(function (err) {
+        res.json({
+            result: "User not found",
+            err: err
+        });
     });
-};
+});
+
+router.get('/contact_us', function (req, res) {
+    res.type('html');
+    res.render('index', { title: '/contact_us' });
+});
+
+module.exports = router;
