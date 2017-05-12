@@ -1,0 +1,7 @@
+extends layout
+
+block content
+    h1= title
+    if(users)
+        - for(var i = 0; i < users.length; i++)
+            p #{users[i].id} - #{users[i].first_name} - #{users[i].last_name} - #{users[i].age} - #{users[i].email}

@@ -21,10 +21,11 @@ router.get('/subscribe/:firstname/:lastname/:age/:email', function (req, res) {
             }
         }).then(function (user) {
             if(user) {
-                res.type('json');
-                res.json({
-                    result: "User already created"
-                });
+                res.type('html');
+                res.render('error', { message: 'User already created', error: {
+                    status: 'Error status : Handled',
+                    stack: ''
+                }});
             } else {
                 User.create({
                     "first_name": user_params['firstname'],
@@ -36,7 +37,7 @@ router.get('/subscribe/:firstname/:lastname/:age/:email', function (req, res) {
                         console.log("User created");
                         console.log(u.first_name + ' - ' + u.last_name);
                         res.type('html');
-                        res.render('index', { title: 'INDEX (/subscribe OK)'});
+                        res.render('index', { title: 'INDEX 1 (/subscribe OK)'});
                     }
                 }).catch(function (err) {
                     throw err;
@@ -45,23 +46,7 @@ router.get('/subscribe/:firstname/:lastname/:age/:email', function (req, res) {
                 res.render('index', { title: 'User ' + user.id + ' = ' + user.first_name + ' created' });
             }
         }).catch(function (err) {
-            User.create({
-                "first_name": user_params['firstname'],
-                "last_name": user_params['lastname'],
-                "age": user_params['age'],
-                "email": user_params['email'],
-            }).then(function (u) {
-                if(u) {
-                    console.log("User created");
-                    console.log(u.first_name + ' - ' + u.last_name);
-                    res.type('html');
-                    res.render('index', { title: 'INDEX (/subscribe OK)'});
-                }
-            }).catch(function (err) {
-                throw err;
-            });
-            res.type('html');
-            res.render('index', { title: 'User ' + user.id + ' = ' + user.first_name + ' created' });
+
         });
 
 
