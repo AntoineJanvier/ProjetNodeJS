@@ -1,16 +1,16 @@
 'use strict';
 
 module.exports = function (app) {
-    app.get('/edit', function (req, res) {
+    app.get('/list', function (req, res) {
         res.type('text');
-        res.send('/edit');
+        res.send('/list');
     });
     app.get('/get', function (req, res) {
         res.type('text');
         res.send('/get');
     });
-    app.get('/contact_us', function (req, res) {
+    app.get('/products_relation', function (req, res) {
         res.type('text');
-        res.send('/contact_us');
+        res.send('/products_relation');
     });
 };
