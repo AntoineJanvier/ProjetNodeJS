@@ -1,11 +1,17 @@
 'use strict';
 
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const Express = require('express');
 const favicon = require('serve-favicon');
+const path = require('path');
 const port = 3791;
+const Sequelize = require('sequelize');
 
 let app = Express();
+
+const models = require('./models');
+models.sequelize.sync();
 
 /**
  * Icon / Favicon
@@ -17,12 +23,39 @@ app.use(favicon(
             'icon.jpg'
         ))
 );
+
 /**
  * Middlewares
  */
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-    extended: true
+    extended: false
 }));
+app.use(cookieParser());
+
+/**
+ * Database connection
+ */
+let sequelize = new Sequelize('nodejs_project_development', 'root', 'root', {
+    host: 'localhost',
+    dialect: 'mysql',
+    pool: {
+        max: 5,
+        min: 0,
+        idle: 10000
+    }
+});
+
+/**
+ * Test the connection to the database
+ */
+sequelize.authenticate()
+    .then(function() {
+        console.log('Connection has been established successfully.');
+    })
+    .catch(function (err) {
+        console.log('Unable to connect to the database:', err);
+    });
 
 /**
  * Routes
@@ -37,11 +70,12 @@ app.use('/timeline', require('./routes/timeline'));
 app.use('/user', require('./routes/user'));
 app.use('/wishlist', require('./routes/wishlist'));
 
+/**
+ * Error on unknown URLs
+ */
 app.all('*', function (req, res) {
     console.log('404');
-    res.status(404);
-    res.type('text');
-    res.send('-> NO WAY!');
+    res.sendStatus(404);
 });
 
 /**

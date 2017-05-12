@@ -18,7 +18,11 @@
   "homepage": "https://github.com/AntoineJanvier/ProjetNodeJS#readme",
   "dependencies": {
     "body-parser": "^1.17.1",
+    "cookie-parser": "^1.4.3",
     "express": "^4.15.2",
+    "mysql": "^2.13.0",
+    "mysql2": "^1.2.0",
+    "path": "^0.12.7",
     "pug": "^2.0.0-rc.1",
     "sequelize": "^3.30.4",
     "serve-favicon": "^2.4.2"

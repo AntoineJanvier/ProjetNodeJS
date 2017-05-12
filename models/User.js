@@ -1,13 +1,44 @@
 'use strict';
 
-let User = function (config) {
-    this.nom = config.nom;
-    this.prenom = config.prenom;
-    this.email = config.email;
-    this.age = config.age;
+module.exports = function (sequelize, DataTypes) {
+    return sequelize.define('User', {
+            id: {
+                type: DataTypes.BIGINT,
+                autoIncrement: true,
+                primaryKey: true
+            },
+            first_name: {
+                type: DataTypes.STRING
+            },
+            last_name: {
+                type: DataTypes.STRING
+            },
+            age: {
+                type: DataTypes.BIGINT
+            },
+            email: {
+                type: DataTypes.STRING
+            },
+        },
+        {
+            paranoid: true,
+            underscored: true,
+            freezeTableName: true,
+            classMethods: {
+                associate: function (models) {
+                }
+            },
+            instanceMethods: {
+                responsify: function () {
+                    return {
+                        id: this.id,
+                        first_name: this.first_name,
+                        last_name: this.last_name,
+                        age: this.age,
+                        email: this.email
+                    };
+                }
+            }
+        }
+    );
 };
-User.prototype.toString = function () {
-    return this.prenom + ' ' + this.nom + ' ' + this.age + ' ' + this.email;
-};
-
-module.exports = User;
