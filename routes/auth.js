@@ -6,13 +6,14 @@ let router = express.Router();
 const models = require('../models');
 const User = models.User;
 
-router.get('/subscribe/:firstname/:lastname/:age/:email', function (req, res) {
-    if(req.params.firstname && req.params.lastname && req.params.age && req.params.email) {
+router.get('/subscribe/:firstname/:lastname/:age/:email/:pwd', function (req, res) {
+    if(req.params.firstname && req.params.lastname && req.params.age && req.params.email && req.params.pwd) {
         const user_params = {
             firstname: req.params.firstname,
             lastname: req.params.lastname,
             age: parseInt(req.params.age),
-            email: req.params.email
+            email: req.params.email,
+            pwd: req.params.pwd
         };
 
         User.find({
@@ -32,6 +33,7 @@ router.get('/subscribe/:firstname/:lastname/:age/:email', function (req, res) {
                     "last_name": user_params['lastname'],
                     "age": user_params['age'],
                     "email": user_params['email'],
+                    "pwd": user_params['pwd'],
                 }).then(function (u) {
                     if(u) {
                         console.log("User created");
@@ -46,20 +48,47 @@ router.get('/subscribe/:firstname/:lastname/:age/:email', function (req, res) {
                 res.render('index', { title: 'User ' + user.id + ' = ' + user.first_name + ' created' });
             }
         }).catch(function (err) {
-
+            console.log('ERROR : User not found');
         });
-
-
-
     }
 });
-router.get('/subscribe', function (req, res) {
+router.get('/log_in/:email/:pwd', function (req, res) {
     res.type('html');
-    res.render('subscribe', { title: '/subscribe' });
-});
-router.get('/log_in', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/log_in' });
+
+    if(req.params.email && req.params.pwd) {
+        const user_identifiers = {
+            email: req.params.email,
+            password: req.params.pwd
+        };
+
+
+        User.find({
+            where: {
+                "email": user_identifiers['email'],
+                "pwd": user_identifiers['password']
+            }
+        }).then(function (user) {
+            if(user) {
+                res.type('html');
+                res.setHeader('Set-Cookie','test=value');
+                res.cookie('connected', 'yes', { maxAge: 900000 });
+                res.render('user_profile', { title: 'Connection OK', user: {
+                    id: user.id,
+                    f_n: user.first_name,
+                    l_n: user.last_name,
+                    age: user.age,
+                    email: user.email
+                }});
+            } else {
+                console.log('BLOUP BLOUP');
+            }
+        }).catch(function (err) {
+            console.log(err);
+            console.log('ERROR : User not found');
+        });
+    }
+
+    // res.render('index', { title: '/log_in' });
 });
 router.get('/log_out', function (req, res) {
     res.type('html');

@@ -19,7 +19,7 @@ models.sequelize.sync();
 app.use(favicon(
         path.join(
             __dirname,
-            'public',
+            'public/images',
             'icon.jpg'
         ))
 );

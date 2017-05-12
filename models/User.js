@@ -19,6 +19,9 @@ module.exports = function (sequelize, DataTypes) {
             email: {
                 type: DataTypes.STRING
             },
+            pwd: {
+                type: DataTypes.STRING
+            },
         },
         {
             paranoid: true,

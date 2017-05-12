@@ -8,6 +8,24 @@ const bodyParser = require('body-parser');
 const index = require('./routes/index');
 const users = require('./routes/users');
 
+// var connect = require('connect');
+// var http = require('http');
+// // gzip/deflate outgoing responses
+// var compression = require('compression');
+// // store session state in browser cookie
+// var cookieSession = require('cookie-session');
+//
+//
+// var app = connect();
+//
+// app.use(compression());
+// app.use(cookieSession({
+//     keys: ['secret1', 'secret2']
+// }));
+//
+// // parse urlencoded request bodies into req.body
+// app.use(bodyParser.urlencoded({extended: false}));
+
 const routes = {
     auth: require('./routes/auth'),
     borrow: require('./routes/borrow'),
@@ -27,7 +45,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public/images', 'icon.jpg')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
