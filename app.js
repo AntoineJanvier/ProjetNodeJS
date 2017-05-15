@@ -42,7 +42,9 @@ const routes = {
 
 let app = express();
 app.use(express_session({
-    secret: 'sgQJEPORWgjeogjWPGJGRJwGRMJRMGJdmorj'
+    secret: 'sgQJEPORWgjeogjWPGJGRJwGRMJRMGJdmorj',
+    resave: true,
+    saveUninitialized: true
 }));
 
 // view engine setup
