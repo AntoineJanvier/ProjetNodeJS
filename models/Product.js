@@ -1,25 +1,22 @@
 'use strict';
 
 module.exports = function (sequelize, DataTypes) {
-    return sequelize.define('User', {
+    return sequelize.define('Product', {
             id: {
                 type: DataTypes.BIGINT,
                 autoIncrement: true,
                 primaryKey: true
             },
-            first_name: {
+            name: {
                 type: DataTypes.STRING
             },
-            last_name: {
-                type: DataTypes.STRING
-            },
-            age: {
+            amount: {
                 type: DataTypes.BIGINT
             },
-            email: {
-                type: DataTypes.STRING
+            price: {
+                type: DataTypes.FLOAT
             },
-            pwd: {
+            barecode: {
                 type: DataTypes.STRING
             },
         },
@@ -34,9 +31,10 @@ module.exports = function (sequelize, DataTypes) {
             instanceMethods: {
                 responsify: function () {
                     return {
-                        name: this.first_name + ' ' + this.last_name,
-                        age: this.age,
-                        email: this.email
+                        name: this.name,
+                        number_in_stock: this.amount,
+                        price: this.price,
+                        code: this.barecode
                     };
                 }
             }

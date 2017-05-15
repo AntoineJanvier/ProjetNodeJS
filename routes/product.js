@@ -3,9 +3,25 @@
 let express = require('express');
 let router = express.Router();
 
-router.get('/get', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/get' });
+const models = require('../models');
+const Product = models.Product;
+
+router.get('/get/:id', function (req, res) {
+    res.type('json');
+
+    let id_product = parseInt(req.params.id) || 0;
+    Product.find({
+        "where": {
+            "id": id_product
+        }
+    }).then(function (product) {
+        res.json(product.responsify());
+    }).catch(function (err) {
+        res.json({
+            msg: "Product not found",
+            err: err
+        });
+    });
 });
 router.get('/list', function (req, res) {
     res.type('html');

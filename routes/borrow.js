@@ -4,32 +4,46 @@ let express = require('express');
 let router = express.Router();
 
 router.get('/list', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/list' });
+    res.type('json');
+    res.json({
+        msg: 'ok'
+    });
 });
 router.get('/request', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/request' });
+    res.type('json');
+    res.json({
+        msg: 'ok'
+    });
 });
 router.get('/pending_request', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/pending_request' });
+    res.type('json');
+    res.json({
+        msg: 'ok'
+    });
 });
 router.get('/reminder', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/reminder' });
+    res.type('json');
+    res.json({
+        msg: 'ok'
+    });
 });
 router.get('/edit', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/edit' });
+    res.type('json');
+    res.json({
+        msg: 'ok'
+    });
 });
 router.get('/external_relationships/create', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/external_relationships/create' });
+    res.type('json');
+    res.json({
+        msg: 'ok'
+    });
 });
 router.get('/external_relationships/edit', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/external_relationships/edit' });
+    res.type('json');
+    res.json({
+        msg: 'ok'
+    });
 });
 
 module.exports = router;

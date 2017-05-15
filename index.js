@@ -6,7 +6,6 @@ const Express = require('express');
 const favicon = require('serve-favicon');
 const path = require('path');
 const port = 3791;
-const Sequelize = require('sequelize');
 
 let app = Express();
 
@@ -16,13 +15,7 @@ models.sequelize.sync();
 /**
  * Icon / Favicon
  */
-app.use(favicon(
-        path.join(
-            __dirname,
-            'public/images',
-            'icon.jpg'
-        ))
-);
+app.use(favicon(path.join(__dirname, 'public/images', 'icon.jpg')));
 
 /**
  * Middlewares
