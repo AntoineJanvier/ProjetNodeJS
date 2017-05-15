@@ -37,6 +37,7 @@ const routes = {
     timeline: require('./routes/timeline'),
     user: require('./routes/user'),
     wishlist: require('./routes/wishlist'),
+    tests: require('./routes/tests'),
 };
 
 let app = express();
@@ -68,6 +69,7 @@ app.use('/product', routes['product']);
 app.use('/timeline', routes['timeline']);
 app.use('/user', routes['user']);
 app.use('/wishlist', routes['wishlist']);
+app.use('/tests', routes['tests']);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

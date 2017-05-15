@@ -26,7 +26,10 @@ module.exports = function (sequelize, DataTypes) {
             freezeTableName: true,
             classMethods: {
                 associate: function (models) {
-                    models.Product.belongsTo(models.User);
+                    models.Product.belongsTo(models.User, {foreignKey: 'fk_belongs'});
+                    models.Product.belongsToMany(models.User, {
+                        through: 'Borrowers'
+                    });
                 }
             },
             instanceMethods: {

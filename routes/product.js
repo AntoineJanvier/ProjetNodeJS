@@ -8,9 +8,6 @@ const Product = models.Product;
 
 let sess;
 
-/**
- * TODO : Adapt from User to Product
- */
 router.post('/create', function (req, res) {
     res.type('json');
 
