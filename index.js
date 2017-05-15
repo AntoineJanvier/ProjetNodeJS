@@ -10,7 +10,9 @@ const port = 3791;
 let app = Express();
 
 const models = require('./models');
-models.sequelize.sync();
+models.sequelize.sync({
+    force: true
+});
 
 /**
  * Icon / Favicon

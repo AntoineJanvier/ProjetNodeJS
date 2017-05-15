@@ -26,6 +26,9 @@ module.exports = function (sequelize, DataTypes) {
             freezeTableName: true,
             classMethods: {
                 associate: function (models) {
+                    models.Product.belongsTo(models.User, {
+                        through: "Belongs"
+                    });
                 }
             },
             instanceMethods: {

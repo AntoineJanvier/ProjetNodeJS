@@ -1,9 +1,9 @@
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const express = require('express');
+const express_session = require('express-session');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
-const passport = require('passport');
 const path = require('path');
 
 const index = require('./routes/index');
@@ -40,6 +40,9 @@ const routes = {
 };
 
 let app = express();
+app.use(express_session({
+    secret: 'sgQJEPORWgjeogjWPGJGRJwGRMJRMGJdmorj'
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
