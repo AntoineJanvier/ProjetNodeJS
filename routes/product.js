@@ -81,7 +81,8 @@ router.post('/get', function (req, res) {
     });
 });
 
-router.get('/list', function (req, res) {res.type('json');
+router.get('/list', function (req, res) {
+    res.type('json');
     Product.findAll().then(function (products) {
         let resp = [];
         for (let p of products)

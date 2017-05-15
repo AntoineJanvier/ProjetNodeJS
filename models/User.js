@@ -29,6 +29,7 @@ module.exports = function (sequelize, DataTypes) {
             freezeTableName: true,
             classMethods: {
                 associate: function (models) {
+                    models.User.belongsToMany(models.User, {as: "Relations", through: "Friends"});
                 }
             },
             instanceMethods: {
