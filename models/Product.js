@@ -1,24 +1,17 @@
 'use strict';
 
-module.exports = function (sequelize, DataTypes) {
-    return sequelize.define('Product', {
+module.exports = (sequelize, DataTypes) => {
+    const Product = sequelize.define('Product', {
             id: {
                 type: DataTypes.BIGINT,
                 autoIncrement: true,
                 primaryKey: true
             },
-            name: {
-                type: DataTypes.STRING
-            },
-            amount: {
-                type: DataTypes.BIGINT
-            },
-            price: {
-                type: DataTypes.FLOAT
-            },
-            barecode: {
-                type: DataTypes.STRING
-            },
+            name: { type: DataTypes.STRING },
+            amount: { type: DataTypes.BIGINT },
+            price: { type: DataTypes.FLOAT },
+            barecode: { type: DataTypes.STRING },
+            borrowed: { type: DataTypes.BOOLEAN }
         },
         {
             paranoid: true,
@@ -26,14 +19,13 @@ module.exports = function (sequelize, DataTypes) {
             freezeTableName: true,
             classMethods: {
                 associate: function (models) {
-                    models.Product.belongsTo(models.User, {foreignKey: 'fk_belongs'});
-                    models.Product.belongsToMany(models.User, {
-                        through: 'Borrowers'
+                    Product.belongsTo(models.User, {
+                        through: "UserProducts"
                     });
                 }
             },
             instanceMethods: {
-                responsify: function () {
+                responsify: () => {
                     return {
                         name: this.name,
                         number_in_stock: this.amount,
@@ -44,4 +36,5 @@ module.exports = function (sequelize, DataTypes) {
             }
         }
     );
+    return Product;
 };

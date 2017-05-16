@@ -9,24 +9,13 @@ const path = require('path');
 const index = require('./routes/index');
 const users = require('./routes/users');
 
-// var connect = require('connect');
-// var http = require('http');
-// // gzip/deflate outgoing responses
-// var compression = require('compression');
-// // store session state in browser cookie
-// var cookieSession = require('cookie-session');
-//
-//
-// var app = connect();
-//
-// app.use(compression());
-// app.use(cookieSession({
-//     keys: ['secret1', 'secret2']
-// }));
-//
-// // parse urlencoded request bodies into req.body
-// app.use(bodyParser.urlencoded({extended: false}));
+const models = require('./models');
+models.sequelize.sync();
 
+/**
+ * Get routes for the application
+ * @type {{auth, borrow, friends, notification, personOfInterest, product, timeline, user, wishlist, tests}}
+ */
 const routes = {
     auth: require('./routes/auth'),
     borrow: require('./routes/borrow'),
@@ -40,6 +29,9 @@ const routes = {
     tests: require('./routes/tests'),
 };
 
+/**
+ * Define the 'app' & With express-session, let us store variables like with $_SESSION in PHP
+ */
 let app = express();
 app.use(express_session({
     secret: 'sgQJEPORWgjeogjWPGJGRJwGRMJRMGJdmorj',
@@ -47,11 +39,15 @@ app.use(express_session({
     saveUninitialized: true
 }));
 
-// view engine setup
+/**
+ * View engine setup (PUG)
+ */
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// uncomment after placing your favicon in /public
+/**
+ * Icon of application & Middlewares
+ */
 app.use(favicon(path.join(__dirname, 'public/images', 'icon.jpg')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -59,9 +55,11 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/**
+ * Routes for the application
+ */
 app.use('/', index);
 app.use('/users', users);
-
 app.use('/auth', routes['auth']);
 app.use('/borrow', routes['borrow']);
 app.use('/friends', routes['friends']);
@@ -73,7 +71,9 @@ app.use('/user', routes['user']);
 app.use('/wishlist', routes['wishlist']);
 app.use('/tests', routes['tests']);
 
-// catch 404 and forward to error handler
+/**
+ * Throw 404 error when route not found
+ */
 app.use(function (req, res, next) {
     let err = new Error('Not Found');
     err.status = 404;

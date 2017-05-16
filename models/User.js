@@ -1,27 +1,17 @@
 'use strict';
 
-module.exports = function (sequelize, DataTypes) {
-    return sequelize.define('User', {
+module.exports = (sequelize, DataTypes) => {
+    const User = sequelize.define('User', {
             id: {
                 type: DataTypes.BIGINT,
                 autoIncrement: true,
                 primaryKey: true
             },
-            first_name: {
-                type: DataTypes.STRING
-            },
-            last_name: {
-                type: DataTypes.STRING
-            },
-            age: {
-                type: DataTypes.BIGINT
-            },
-            email: {
-                type: DataTypes.STRING
-            },
-            pwd: {
-                type: DataTypes.STRING
-            },
+            first_name: { type: DataTypes.STRING },
+            last_name: { type: DataTypes.STRING },
+            age: { type: DataTypes.BIGINT },
+            email: { type: DataTypes.STRING },
+            pwd: { type: DataTypes.STRING },
         },
         {
             paranoid: true,
@@ -29,18 +19,28 @@ module.exports = function (sequelize, DataTypes) {
             freezeTableName: true,
             classMethods: {
                 associate: function (models) {
-                    models.User.belongsToMany(models.User, {as: "Relations", through: "Friends"});
+                    User.belongsToMany(models.Product, {
+                        through: "UserProducts"
+                    });
+                    User.belongsToMany(User, {
+                        through: "Friends",
+                        as: 'Friends'
+                    })
                 }
             },
             instanceMethods: {
-                responsify: function () {
-                    return {
-                        name: this.first_name + ' ' + this.last_name,
-                        age: this.age,
-                        email: this.email
-                    };
+                responsify: () => {
+                    let r = {};
+                    if (this.Product)
+                        for(let p of this.Product)
+                            p = p.responsify();
+                    r.products = this.Product;
+                    r.name = this.first_name + ' ' + this.last_name;
+                    r.age = this.age;
+                    r.email = this.email;
+                    return r;
                 }
             }
-        }
-    );
+        });
+    return User;
 };

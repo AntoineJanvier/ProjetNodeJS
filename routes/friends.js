@@ -3,17 +3,33 @@
 let express = require('express');
 let router = express.Router();
 
+const User = require('../models/User');
+
 router.get('/list', function (req, res) {
     res.type('html');
     res.render('index', { title: '/list' });
 });
 router.get('/search', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/search' });
+
 });
-router.get('/remove', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/remove' });
+router.get('/remove', (req, res) => {
+    res.type('json');
+    res.json({
+        msg: 'ok'
+    });
+
+    // let u1 = parseInt(req.body.u1);
+    // let u2 = parseInt(req.body.u2);
+
+    // User.find({
+    //     where: { id: u1 }
+    // }).then(user1 => {
+    //     return User.find({
+    //         where: { id: u2 }
+    //     }).then(user2 => {
+    //         return
+    //     })
+    // })
 });
 router.get('/join', function (req, res) {
     res.type('html');
