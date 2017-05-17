@@ -11,35 +11,43 @@ router.get('/edit/:id', function (req, res) {
 
     let id = parseInt(req.params.id) || 0;
     User.find({
-        "where": {
-            "id": id
+        where: {
+            id: id
         }
     }).then(function (user) {
         res.json(user.responsify());
     }).catch(function (err) {
         res.json({
-            msg: "User not found",
+            msg: 'User not found',
             err: err
         });
     });
 });
 
-router.get('/get/:id', function (req, res) {
+router.post('/get', (req, res) => {
     res.type('json');
 
-    let id = parseInt(req.params.id) || 0;
-    User.find({
-        "where": {
-            "id": id
-        }
-    }).then(function (user) {
-        res.json(user.responsify());
-    }).catch(function (err) {
-        res.json({
-            msg: "User not found",
-            err: err
+    let u_id = parseInt(req.body.id) || 0;
+
+    if (u_id) {
+        User.find({
+            where: { id: u_id }
+        }).then(user => {
+            if (user.Products) {
+                res.json({
+                    User: user,
+                    Friends: user.Users
+                })
+            }
+            res.json({
+                User: user,
+            });
+        }).catch(err => {
+            res.json({ msg: 'User not found', err: err });
         });
-    });
+    } else
+        res.json({ msg: 'Bad entry...' });
+
 });
 
 router.get('/all', function (req, res) {

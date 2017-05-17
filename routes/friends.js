@@ -3,82 +3,100 @@
 let express = require('express');
 let router = express.Router();
 
-const User = require('../models/User');
+const models = require('../models');
+const User = models.User;
 
 router.get('/list', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/list' });
-});
-router.get('/search', function (req, res) {
-
-});
-router.get('/remove', (req, res) => {
     res.type('json');
-    res.json({
-        msg: 'ok'
-    });
+    res.json({ msg: 'OK' });
+});
+router.post('/search', function (req, res) {
+    res.type('json');
+    res.json({ msg: 'OK' });
+});
+router.post('/remove', (req, res) => {
+    res.type('json');
+    res.json({ msg: 'OK' });
+});
+router.post('/join', function (req, res) {
+    res.type('json');
+    res.json({ msg: 'OK' });
+});
+router.post('/remove', function (req, res) {
+    res.type('json');
+    res.json({ msg: 'OK' });
+});
 
-    // let u1 = parseInt(req.body.u1);
-    // let u2 = parseInt(req.body.u2);
+/**
+ * TODO : Test associations User => User (hasMany is preconized in the doc)
+ */
+router.post('/request', (req, res) => {
+    res.type('json');
 
-    // User.find({
-    //     where: { id: u1 }
-    // }).then(user1 => {
-    //     return User.find({
-    //         where: { id: u2 }
-    //     }).then(user2 => {
-    //         return
-    //     })
-    // })
+    let id_u1 = req.body.id_user1;
+    let id_u2 = req.body.id_user2;
+
+    if (id_u1 && id_u2) {
+        User.find({
+            where: { id: id_u1 }
+        }).then(u1 => {
+            return User.find({
+                where: { id: id_u2 }
+            }).then(u2 => {
+                return u1.update({
+                    User: u1.User + u2
+                }).then(() => {
+                    res.json({ msg: 'User' + u1.id + ' requested User' + u2.id});
+                }).catch(err => {
+                    res.json({ msg: 'Error while requesting friend from UserA to UserB', err: err});
+                });
+            }).catch(err => {
+                res.json({ msg: 'UserB not found...', err: err });
+            })
+        }).catch(err => {
+            res.json({ msg: 'UserA not found...', err: err });
+        });
+    } else
+        res.json({ msg: 'Bad entry...' });
+
 });
-router.get('/join', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/join' });
+
+router.post('/pending_requests', function (req, res) {
+    res.type('json');
+    res.json({ msg: 'OK' });
 });
-router.get('/remove', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/remove' });
+router.post('/pending_requests_count', function (req, res) {
+    res.type('json');
+    res.json({ msg: 'OK' });
 });
-router.get('/request', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/request' });
+router.post('/request_decision', function (req, res) {
+    res.type('json');
+    res.json({ msg: 'OK' });
 });
-router.get('/pending_requests', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/pending_requests' });
+router.post('/external_relationships/create', function (req, res) {
+    res.type('json');
+    res.json({ msg: 'OK' });
 });
-router.get('/pending_requests_count', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/pending_requests_count' });
+router.post('/external_relationships/edit', function (req, res) {
+    res.type('json');
+    res.json({ msg: 'OK' });
 });
-router.get('/request_decision', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/request_decision' });
+router.post('/external_relationships/remove', function (req, res) {
+    res.type('json');
+    res.json({ msg: 'OK' });
 });
-router.get('/external_relationships/create', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/external_relationships/create' });
-});
-router.get('/external_relationships/edit', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/external_relationships/edit' });
-});
-router.get('/external_relationships/remove', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/external_relationships/remove' });
-});
-router.get('/external_relationships/list', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/external_relationships/list' });
+router.post('/external_relationships/list', function (req, res) {
+    res.type('json');
+    res.json({ msg: 'OK' });
 });
 
 
 /**
  * IF WE HAVE TIME...
  */
-router.get('/search_facebook', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/search_facebook' });
+router.post('/search_facebook', function (req, res) {
+    res.type('json');
+    res.json({ msg: 'OK' });
 });
 
 module.exports = router;

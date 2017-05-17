@@ -20,25 +20,26 @@ module.exports = (sequelize, DataTypes) => {
             classMethods: {
                 associate: function (models) {
                     User.belongsToMany(models.Product, {
-                        through: "UserProducts"
+                        through: 'UserProducts'
                     });
                     User.belongsToMany(User, {
-                        through: "Friends",
+                        through: 'Friends',
                         as: 'Friends'
                     })
                 }
             },
             instanceMethods: {
                 responsify: () => {
-                    let r = {};
                     if (this.Product)
                         for(let p of this.Product)
                             p = p.responsify();
-                    r.products = this.Product;
-                    r.name = this.first_name + ' ' + this.last_name;
-                    r.age = this.age;
-                    r.email = this.email;
-                    return r;
+                    return {
+                        first_name: this.first_name,
+                        last_name: this.last_name,
+                        age: this.age,
+                        email: this.email,
+                        products: this.Product
+                    };
                 }
             }
         });
