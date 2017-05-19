@@ -36,7 +36,7 @@ router.post('/get', (req, res) => {
             if (user.Products) {
                 res.json({
                     User: user,
-                    Friends: user.Users
+                    Friend: user.Users
                 })
             }
             res.json({

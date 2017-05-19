@@ -72,6 +72,7 @@ router.post('/log_in', function (req, res) {
             where: { 'email': u_email, 'pwd': u_pwd }
         }).then(user => {
             if(user) {
+                sess.userid = user.userid;
                 sess.first_name = user.first_name;
                 sess.last_name = user.last_name;
                 sess.age = user.age;
@@ -97,13 +98,13 @@ router.get('/log_out', (req, res) => {
 
     if (!sess.email)
         res.json({ msg: 'Don\'t need to disconnect, you are not connected !' });
-
-    req.session.destroy(err => {
-        if(err)
-            res.json({ msg: 'Error while trying to disconnect...', err: err });
-        else
-            res.json({ msg: 'Disconnection OK', });
-    });
+    else
+        req.session.destroy(err => {
+            if(err)
+                res.json({ msg: 'Error while trying to disconnect...', err: err });
+            else
+                res.json({ msg: 'Disconnection OK', });
+        });
 });
 
 router.post('/password_lost', (req, res) => {

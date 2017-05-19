@@ -5,6 +5,7 @@ let router = express.Router();
 
 const models = require('../models');
 const User = models.User;
+const Friend = models.Friend;
 
 router.get('/list', function (req, res) {
     res.type('json');
@@ -43,13 +44,20 @@ router.post('/request', (req, res) => {
             return User.find({
                 where: { id: id_u2 }
             }).then(u2 => {
-                return u1.update({
-                    User: u1.User + u2
-                }).then(() => {
-                    res.json({ msg: 'User' + u1.id + ' requested User' + u2.id});
+                Friend.create().then({
+
                 }).catch(err => {
-                    res.json({ msg: 'Error while requesting friend from UserA to UserB', err: err});
-                });
+                    res.json({ msg: 'Unable to create a friend relationship...' });
+                })
+                // u1.addUser(u2, { through: {status: 'Pending'} });
+
+                // return u2.update({
+                //     User: u2.User + u1
+                // }).then(() => {
+                //     res.json({ msg: 'User' + u1.id + ' requested User' + u2.id});
+                // }).catch(err => {
+                //     res.json({ msg: 'Error while requesting friend from UserA to UserB', err: err});
+                // });
             }).catch(err => {
                 res.json({ msg: 'UserB not found...', err: err });
             })

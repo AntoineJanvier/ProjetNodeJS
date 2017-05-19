@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('User', {
-            id: {
+            userid: {
                 type: DataTypes.BIGINT,
                 autoIncrement: true,
                 primaryKey: true
@@ -20,11 +20,10 @@ module.exports = (sequelize, DataTypes) => {
             classMethods: {
                 associate: function (models) {
                     User.belongsToMany(models.Product, {
-                        through: 'UserProducts'
+                        through: 'UserProduct'
                     });
-                    User.belongsToMany(User, {
-                        through: 'Friends',
-                        as: 'Friends'
+                    User.belongsToMany(models.Product, {
+                        through: 'Like'
                     })
                 }
             },

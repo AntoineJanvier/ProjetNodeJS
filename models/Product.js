@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
     const Product = sequelize.define('Product', {
-            id: {
+            productid: {
                 type: DataTypes.BIGINT,
                 autoIncrement: true,
                 primaryKey: true
@@ -22,6 +22,9 @@ module.exports = (sequelize, DataTypes) => {
                     Product.belongsTo(models.User, {
                         through: "UserProducts"
                     });
+                    Product.belongsToMany(models.User, {
+                        through: 'Like',
+                    })
                 }
             },
             instanceMethods: {
