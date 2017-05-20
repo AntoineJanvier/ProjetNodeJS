@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    const Like = sequelize.define('Like', {
+    const UserProduct = sequelize.define('UserProduct', {
         id: {
             type: DataTypes.BIGINT,
             autoIncrement: true,
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         freezeTableName: true,
         classMethods: {
             associate: function (models) {
-                Like.belongsTo(models.Product, {
+                UserProduct.belongsTo(models.Product, {
                     foreignKey: 'fk_Product'
                 });
             }
@@ -28,5 +28,5 @@ module.exports = (sequelize, DataTypes) => {
             }
         }
     });
-    return Like;
+    return UserProduct;
 };

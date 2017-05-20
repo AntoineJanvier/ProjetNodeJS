@@ -56,7 +56,29 @@ router.post('/search',  (req, res) => {
 });
 router.post('/remove', (req, res) => {
     res.type('json');
-    res.json({ msg: 'OK' });
+    sess = req.session;
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        let id_user2 = req.body.idUser2;
+        if (id_user2) {
+            if (id_user2)
+                User.find({
+                    where: { email: sess.email }
+                }).then(u1 => {
+                    return User.findById(id_user2).then(u2 => {
+                        return Friend.find({
+                            where: { user: u1.userid, fk_User: u2.userid }
+                        }).then(f => {
+                            return f.destroy().then(() => {
+                                res.json({ msg: 'Friend removed' });
+                            }).catch(err => { res.json({ msg: 'Can\'t update relation...', err: err }); });
+                        }).catch(err => { res.json({ msg: 'No relation', err: err }); });
+                    }).catch(err => { res.json({ msg: 'Error while getting user2', err: err }); });
+                }).catch(err => { res.json({ msg: 'UserA not found...', err: err }); });
+        } else
+            res.json({ msg: 'Bad entry...' });
+    }
 });
 router.post('/join',  (req, res) => {
     res.type('json');
