@@ -73,22 +73,29 @@ router.get('/random', (req, res) => {
         nb_rand = nb_rand === 0 ? nb_rand + 1 : nb_rand;
 
         return Product.findById(nb_rand).then(p => {
-            res.json(p.stringify());
-        }).catch(err => {
-            res.json({ msg: 'Product not found', err: err });
-        });
-    }).catch(err => {
-        res.json({ msg: 'Unable to count products...', err: err });
-    });
+            res.json(p);
+        }).catch(err => { res.json({ msg: 'Product not found', err: err }); });
+    }).catch(err => { res.json({ msg: 'Unable to count products...', err: err }); });
 });
 
-/**
- * TODO : Find which product the user liked
- */
 router.get('/like', (req, res) => {
     res.type('json');
 
-    res.json({ msg: 'ok' });
+    sess = req.session;
+
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        User.find({
+            where: { email: sess.email }
+        }).then(u => {
+            return Like.findAll({
+                where: { user: u.userid }
+            }).then(likes => {
+                res.json(likes);
+            }).catch(err => { res.json({ msg: 'Unable to find Likes', err: err }); });
+        }).catch(err => { res.json({ msg: 'Unable to find user', err: err }); });
+    }
 });
 
 /**
@@ -96,34 +103,41 @@ router.get('/like', (req, res) => {
  */
 router.post('/like_product', (req, res) => {
     res.type('json');
-
-    let p_id = parseInt(req.body.product_id);
-
     sess = req.session;
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        let p_id = parseInt(req.body.product_id);
+        if (p_id) {
+            User.find({
+                where: { email: sess.email }
+            }).then(user => {
+                return Product.findById(p_id).then(product => {
 
-    if (p_id && sess.userid) {
-        User.findById(sess.userid).then(user => {
-            Product.findById(p_id).then(product => {
-                console.log('User: ' + user.first_name + ' Product: ' + product.name);
-                Like.create({
-                    User: user,
-                    Product: product
-                }).then(l => {
-                    res.json({
-                        msg: 'Like created',
-                        like: l
-                    });
-                }).catch(err => {
-                    res.json({ msg: 'Unable to create like', err: err });
-                });
-            }).catch(err => {
-                res.json({ msg: 'Unable to get product', err: err });
-            });
-        }).catch(err => {
-            res.json({ msg: 'Unable to get user', err: err });
-        });
-    } else {
-        res.json({ msg: 'Bad entry...' });
+                    return Like.find({
+                        where: { user: user.userid, fk_Product: product.productid },
+                        paranoid: false
+                    }).then(l => {
+                        if (l) {
+                            if (l.deleted_at)
+                                return l.restore().then(() => {
+                                    res.json({ msg: 'Re-liked' });
+                                }).catch(err => { res.json({ msg: 'Unable to unlike', err: err }); });
+                            else
+                                return l.destroy().then(() => {
+                                    res.json({ msg: 'Unliked' });
+                                }).catch(err => { res.json({ msg: 'Unable to destroy like', err: err }); });
+                        } else
+                            return Like.create({
+                                user: user.userid, fk_Product: product.productid
+                            }).then(l => {
+                                res.json({ msg: 'Like created', like: l });
+                            }).catch(err => { res.json({ msg: 'Unable to create like', err: err }); });
+                    }).catch(err => { res.json({ msg: 'Unable to find like', err: err }); });
+                }).catch(err => { res.json({ msg: 'Unable to get product', err: err }); });
+            }).catch(err => { res.json({ msg: 'Unable to get user', err: err }); });
+        } else
+            res.json({ msg: 'Bad entry...' });
     }
 });
 
