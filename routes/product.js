@@ -9,6 +9,7 @@ const User = models.User;
 const Like = models.Like;
 const Product = models.Product;
 const UserProduct = models.UserProduct;
+const Comment = models.Comment;
 
 let sess;
 
@@ -204,12 +205,28 @@ router.get('/reviews/list', (req, res) => {
     res.json({ msg: 'ok' });
 });
 
-/**
- * TODO : Generate a comment on a product
- */
-router.get('/reviews/create', (req, res) => {
+router.post('/reviews/create', (req, res) => {
     res.type('json');
-    res.json({ msg: 'ok' });
+    sess = req.session;
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        let p_id = req.body.idProduct;
+        let t = req.body.comment_text;
+
+        if (p_id && t) {
+            User.find({
+                where: { email: sess.email }
+            }).then(u => {
+                return Comment.create({
+                    user: u.userid, fk_Product: p_id, text: t
+                }).then(c => {
+                    res.json({ msg: 'Comment inserted', comment: c });
+                }).catch(err => { res.json({ msg: 'Unable to create comment', err: err }); });
+            }).catch(err => { res.json({ msg: 'Unable to find user', err: err }); });
+        } else
+            res.json({ msg: 'Bad entry...' });
+    }
 });
 
 /**
