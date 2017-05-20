@@ -12,11 +12,47 @@ let sess;
 
 router.get('/list',  (req, res) => {
     res.type('json');
-    res.json({ msg: 'OK' });
+
+    sess = req.session;
+
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        User.find({
+            where: { email: sess.email }
+        }).then(u1 => {
+            return Friend.findAll({
+                where: { status: 'ACCEPTED', user: u1.userid }
+            }).then(friends => {
+                let res_friends = [];
+                for (let f of friends)
+                    res_friends.push(f.fk_User);
+                res.json({ NB_OF_FRIENDS: friends.length, friends_ids: res_friends });
+            }).catch(err => { res.json({ msg: 'Enable to find friends', err: err }); });
+        }).catch(err => { res.json({ msg: 'UserA not found...', err: err }); });
+    }
 });
 router.post('/search',  (req, res) => {
     res.type('json');
-    res.json({ msg: 'OK' });
+
+    sess = req.session;
+
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        User.find({
+            where: { email: sess.email }
+        }).then(u1 => {
+            let idFriendToSearch = req.body.idFriendToSearch;
+            return Friend.find({
+                where: { status: 'ACCEPTED', user: u1.userid, fk_User: idFriendToSearch }
+            }).then(friend => {
+                return User.findById(friend.fk_User).then( u => {
+                    res.json(u);
+                }).catch(err => { res.json({ msg: 'Can\'t find user (friend)', err: err }); });
+            }).catch(err => { res.json({ msg: 'Enable to find friend', err: err }); });
+        }).catch(err => { res.json({ msg: 'UserA not found...', err: err }); });
+    }
 });
 router.post('/remove', (req, res) => {
     res.type('json');
