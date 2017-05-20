@@ -246,12 +246,32 @@ router.post('/reviews/create', (req, res) => {
     }
 });
 
-/**
- * TODO : Edit a given reviews of a product
- */
-router.get('/reviews/edit', (req, res) => {
+router.post('/reviews/edit', (req, res) => {
     res.type('json');
-    res.json({ msg: 'ok' });
+    sess = req.session;
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        let c_id = req.body.idComment;
+        let t = req.body.comment_text;
+
+        if (c_id && t) {
+            User.find({
+                where: { email: sess.email }
+            }).then(u => {
+                return Comment.find({
+                    where: { id: c_id, user: u.userid }
+                }).then(c => {
+                    return c.update({
+                        text: t
+                    }).then(c => {
+                        res.json({ msg: 'Comment updated', comment: c });
+                    }).catch(err => { res.json({ msg: 'Unable to udpate comment', err: err }); });
+                }).catch(err => { res.json({ msg: 'Unable to find comment', err: err }); });
+            }).catch(err => { res.json({ msg: 'Unable to find user', err: err }); });
+        } else
+            res.json({ msg: 'Bad entry...' });
+    }
 });
 
 /**
