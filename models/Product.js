@@ -19,12 +19,6 @@ module.exports = (sequelize, DataTypes) => {
             freezeTableName: true,
             classMethods: {
                 associate: function (models) {
-                    Product.belongsTo(models.User, {
-                        through: "UserProducts"
-                    });
-                    Product.belongsToMany(models.User, {
-                        through: 'Like',
-                    })
                 }
             },
             instanceMethods: {
