@@ -197,12 +197,29 @@ router.post('/ownership', (req, res) => {
     }
 });
 
-/**
- * TODO : For a product (get by ID), list all comments on it
- */
-router.get('/reviews/list', (req, res) => {
+router.post('/reviews/list', (req, res) => {
     res.type('json');
-    res.json({ msg: 'ok' });
+
+    sess = req.session;
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        let p_id = parseInt(req.body.idProduct);
+        if (p_id) {
+            Comment.findAll({
+                where: { fk_Product: p_id }
+            }).then(cs => {
+                console.log(cs);
+                let res_c = [];
+                for (let c of cs)
+                    res_c.push(c.responsify());
+                res.json(res_c);
+            }).catch(err => {
+                res.json({ msg: 'Unable to find comments', err: err });
+            })
+        } else
+            res.json({ msg: 'Bad entry...' });
+    }
 });
 
 router.post('/reviews/create', (req, res) => {
