@@ -3,17 +3,17 @@
 let express = require('express');
 let router = express.Router();
 
-router.get('/add', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/add' });
+router.get('/add', (req, res) => {
+    res.type('json');
+    res.json({ msg: 'ok' });
 });
-router.get('/list', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/list' });
+router.get('/list', (req, res) => {
+    res.type('json');
+    res.json({ msg: 'ok' });
 });
-router.get('/remove', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/remove' });
+router.get('/remove', (req, res) => {
+    res.type('json');
+    res.json({ msg: 'ok' });
 });
 
 module.exports = router;

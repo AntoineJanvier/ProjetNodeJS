@@ -1,14 +1,7 @@
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 section {
-  padding-left: 20px !important;
-  padding-right: 20px !important;
-  color: black;
-}
-.link_header {
-  color: white;
-}
-header {
-  background-color: #3498db;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
 }

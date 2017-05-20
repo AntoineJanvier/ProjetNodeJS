@@ -3,9 +3,9 @@
 let express = require('express');
 let router = express.Router();
 
-router.get('/get', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/get' });
+router.get('/get', (req, res) => {
+    res.type('json');
+    res.json({ msg: 'ok' });
 });
 
 module.exports = router;

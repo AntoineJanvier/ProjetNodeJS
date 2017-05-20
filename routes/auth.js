@@ -159,7 +159,7 @@ router.post('/edit_password', (req, res) => {
 /**
  * IF WE HAVE TIME...
  */
-router.get('/facebook_connect', function (req, res) {
+router.get('/facebook_connect', (req, res) => {
     res.type('json');
     res.json({ msg: 'ok' });
 });

@@ -47,31 +47,31 @@ router.post('/request', (req, res) => {
     } else
         res.json({ msg: 'Bad entry...' });
 });
-router.get('/pending_request', function (req, res) {
+router.get('/pending_request', (req, res) => {
     res.type('json');
     res.json({
         msg: 'ok'
     });
 });
-router.get('/reminder', function (req, res) {
+router.get('/reminder', (req, res) => {
     res.type('json');
     res.json({
         msg: 'ok'
     });
 });
-router.get('/edit', function (req, res) {
+router.get('/edit', (req, res) => {
     res.type('json');
     res.json({
         msg: 'ok'
     });
 });
-router.get('/external_relationships/create', function (req, res) {
+router.get('/external_relationships/create', (req, res) => {
     res.type('json');
     res.json({
         msg: 'ok'
     });
 });
-router.get('/external_relationships/edit', function (req, res) {
+router.get('/external_relationships/edit', (req, res) => {
     res.type('json');
     res.json({
         msg: 'ok'

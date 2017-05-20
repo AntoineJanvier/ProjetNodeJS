@@ -7,11 +7,11 @@ const models = require('../models');
 const User = models.User;
 const Friend = models.Friend;
 
-router.get('/list', function (req, res) {
+router.get('/list',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
-router.post('/search', function (req, res) {
+router.post('/search',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
@@ -19,11 +19,11 @@ router.post('/remove', (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
-router.post('/join', function (req, res) {
+router.post('/join',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
-router.post('/remove', function (req, res) {
+router.post('/remove',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
@@ -44,10 +44,13 @@ router.post('/request', (req, res) => {
             return User.find({
                 where: { id: id_u2 }
             }).then(u2 => {
-                Friend.create().then({
-
+                Friend.create({
+                    User: u1,
+                    Friend: u2
+                }).then(f => {
+                    res.json({ msg: 'Add friend ok', Friend: f });
                 }).catch(err => {
-                    res.json({ msg: 'Unable to create a friend relationship...' });
+                    res.json({ msg: 'Unable to create a friend relationship...', err: err });
                 })
                 // u1.addUser(u2, { through: {status: 'Pending'} });
 
@@ -69,31 +72,31 @@ router.post('/request', (req, res) => {
 
 });
 
-router.post('/pending_requests', function (req, res) {
+router.post('/pending_requests',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
-router.post('/pending_requests_count', function (req, res) {
+router.post('/pending_requests_count',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
-router.post('/request_decision', function (req, res) {
+router.post('/request_decision',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
-router.post('/external_relationships/create', function (req, res) {
+router.post('/external_relationships/create',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
-router.post('/external_relationships/edit', function (req, res) {
+router.post('/external_relationships/edit',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
-router.post('/external_relationships/remove', function (req, res) {
+router.post('/external_relationships/remove',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
-router.post('/external_relationships/list', function (req, res) {
+router.post('/external_relationships/list',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
@@ -102,7 +105,7 @@ router.post('/external_relationships/list', function (req, res) {
 /**
  * IF WE HAVE TIME...
  */
-router.post('/search_facebook', function (req, res) {
+router.post('/search_facebook',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });

@@ -7,7 +7,7 @@ const models = require('../models');
 const User = models.User;
 const Product = models.Product;
 
-router.get('/fill_database', function (req, res) {
+router.get('/fill_database', (req, res) => {
     let users = [];
     let products = [];
     let cmp = 0;

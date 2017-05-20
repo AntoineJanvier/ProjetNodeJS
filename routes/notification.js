@@ -3,13 +3,13 @@
 let express = require('express');
 let router = express.Router();
 
-router.get('/list', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/list' });
+router.get('/list', (req, res) => {
+    res.type('json');
+    res.json({ msg: 'ok' });
 });
-router.get('/edit', function (req, res) {
-    res.type('html');
-    res.render('index', { title: '/edit' });
+router.get('/edit', (req, res) => {
+    res.type('json');
+    res.json({ msg: 'ok' });
 });
 
 module.exports = router;

@@ -6,7 +6,7 @@ let router = express.Router();
 const models = require('../models');
 const User = models.User;
 
-router.get('/edit/:id', function (req, res) {
+router.get('/edit/:id', (req, res) => {
     res.type('json');
 
     let id = parseInt(req.params.id) || 0;
@@ -50,7 +50,7 @@ router.post('/get', (req, res) => {
 
 });
 
-router.get('/all', function (req, res) {
+router.get('/all', (req, res) => {
     res.type('json');
     User.findAll().then(function (users) {
         let resp = [];
@@ -65,7 +65,7 @@ router.get('/all', function (req, res) {
     });
 });
 
-router.get('/contact_us', function (req, res) {
+router.get('/contact_us', (req, res) => {
     res.type('json');
     res.json({
         msg: 'Contact page',

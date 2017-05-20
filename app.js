@@ -6,9 +6,6 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const path = require('path');
 
-const index = require('./routes/index');
-const users = require('./routes/users');
-
 const models = require('./models');
 models.sequelize.sync({
     force: true
@@ -60,8 +57,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 /**
  * Routes for the application
  */
-app.use('/', index);
-app.use('/users', users);
 app.use('/auth', routes['auth']);
 app.use('/borrow', routes['borrow']);
 app.use('/friends', routes['friends']);
