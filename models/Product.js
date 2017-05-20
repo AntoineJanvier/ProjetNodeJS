@@ -22,12 +22,13 @@ module.exports = (sequelize, DataTypes) => {
                 }
             },
             instanceMethods: {
-                responsify: () => {
+                responsify: function() {
                     return {
                         name: this.name,
                         number_in_stock: this.amount,
                         price: this.price,
-                        code: this.barecode
+                        code: this.barecode,
+                        borrowed: this.borrowed
                     };
                 }
             }

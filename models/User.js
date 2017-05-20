@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
                 }
             },
             instanceMethods: {
-                responsify: () => {
+                responsify: function() {
                     return {
                         name: this.first_name + ' ' + this.last_name,
                         email: this.email,

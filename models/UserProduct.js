@@ -26,8 +26,11 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         instanceMethods: {
-            responsify: () => {
-                return {};
+            responsify: function() {
+                return {
+                    User_ID: this.user,
+                    Product_ID: this.fk_Product
+                };
             }
         }
     });

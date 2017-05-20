@@ -104,30 +104,35 @@ router.post('/request', (req, res) => {
     // } else
     //     res.json({ msg: 'Bad entry...' });
 });
+
 router.get('/pending_request', (req, res) => {
     res.type('json');
     res.json({
         msg: 'ok'
     });
 });
+
 router.get('/reminder', (req, res) => {
     res.type('json');
     res.json({
         msg: 'ok'
     });
 });
+
 router.get('/edit', (req, res) => {
     res.type('json');
     res.json({
         msg: 'ok'
     });
 });
+
 router.get('/external_relationships/create', (req, res) => {
     res.type('json');
     res.json({
         msg: 'ok'
     });
 });
+
 router.get('/external_relationships/edit', (req, res) => {
     res.type('json');
     res.json({

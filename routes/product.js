@@ -23,44 +23,33 @@ router.post('/create', (req, res) => {
 
     if(p_name && p_amount && p_price && p_barecode) {
         Product.find({
-            attributes: ['email'],
-            where: {
-                barecode: p_barecode
-            }
-        }).then(user => {
-            if(user) {
+            where: { barecode: p_barecode }
+        }).then(product => {
+            if(product) {
                 res.json({ msg: 'Product already created...', err: {} });
             } else {
                 Product.create({
-                    "name": p_name, "amount": p_amount, "price": p_price, "barecode": p_barecode
+                    name: p_name, amount: p_amount, price: p_price, barecode: p_barecode
                 }).then(p => {
                     if(p)
                         res.json({ Product: p.responsify() });
                     else
                         res.json({ error: 'Error while creating product' });
-                }).catch(err => {
-                    throw err;
-                });
+                }).catch(err => { throw err; });
             }
-        }).catch(err => {
-            res.json({ error: 'Error...', err: err });
-        });
-    }
+        }).catch(err => { res.json({ error: 'Error...', err: err }); });
+    } else
+        res.json({ msg: 'Bad entry...' });
 });
 
 router.post('/get', (req, res) => {
     res.type('json');
-
     let id_product = parseInt(req.body.id) || 0;
     Product.find({
-        where: {
-            id: id_product
-        }
+        where: { productid: id_product }
     }).then(product => {
-        res.json(product.responsify());
-    }).catch(err => {
-        res.json({ msg: "Product not found", err: err });
-    });
+        res.json(product);
+    }).catch(err => { res.json({ msg: "Product not found", err: err }); });
 });
 
 router.get('/list', (req, res) => {
@@ -83,9 +72,9 @@ router.get('/random', (req, res) => {
         let nb_rand = Math.round(Math.random() * nb);
         nb_rand = nb_rand === 0 ? nb_rand + 1 : nb_rand;
 
-        Product.findById(nb_rand).then(p => {
-            res.json({ Product: p });
-        }).catch(err =>{
+        return Product.findById(nb_rand).then(p => {
+            res.json(p.stringify());
+        }).catch(err => {
             res.json({ msg: 'Product not found', err: err });
         });
     }).catch(err => {

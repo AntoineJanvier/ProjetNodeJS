@@ -31,7 +31,7 @@ router.post('/subscribe', (req, res) => {
                         sess.last_name = u.last_name;
                         sess.age = u.age;
                         sess.email = u.email;
-                        res.json({ msg: 'User ' + u.first_name + ' ' + u.last_name + ' created',  Session: sess });
+                        res.json({ User: u.stringify(),  Session: sess });
                     } else
                         res.json({ error: 'Error while creating user' });
                 }).catch(err => { throw err; });

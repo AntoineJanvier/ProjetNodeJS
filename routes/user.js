@@ -2,26 +2,45 @@
 
 let express = require('express');
 let router = express.Router();
+let session = require('express-session');
 
 const models = require('../models');
 const User = models.User;
 
-router.get('/edit/:id', (req, res) => {
+let sess;
+
+router.post('/edit', (req, res) => {
     res.type('json');
 
-    let id = parseInt(req.params.id) || 0;
-    User.find({
-        where: {
-            id: id
+    sess = req.session;
+
+    if (!sess.email)
+        res.json({ msg: 'You are not connected' });
+    else {
+        let u_email = req.body.email;
+        let u_firstname = req.body.first_name;
+        let u_lastname = req.body.last_name;
+        let u_age = parseInt(req.body.age);
+        let u_pwd = req.body.pwd;
+        if (u_email === sess.email) {
+            res.json({ msg: 'You can\'t modify yourself' });
+        } else {
+            if(u_firstname && u_lastname && u_age && u_email && u_pwd) {
+                User.find({ where: { email: u_email }
+                }).then(user => {
+                    user.update({
+                        first_name: u_firstname,
+                        last_name: u_lastname,
+                        age: u_age,
+                        pwd: u_pwd
+                    }).then(u => {
+                        res.json({ msg: 'User updated', user: u });
+                    }).catch(err => { res.json({ msg: 'Error on update', err: err }); });
+                }).catch(err => { res.json({ error: 'Error...', err: err }) });
+            } else
+                res.json({ msg: 'Bad entry...' });
         }
-    }).then(function (user) {
-        res.json(user.responsify());
-    }).catch(function (err) {
-        res.json({
-            msg: 'User not found',
-            err: err
-        });
-    });
+    }
 });
 
 router.post('/get', (req, res) => {
@@ -31,20 +50,10 @@ router.post('/get', (req, res) => {
 
     if (u_id) {
         User.find({
-            where: { id: u_id }
+            where: { userid: u_id }
         }).then(user => {
-            if (user.Products) {
-                res.json({
-                    User: user,
-                    Friend: user.Users
-                })
-            }
-            res.json({
-                User: user,
-            });
-        }).catch(err => {
-            res.json({ msg: 'User not found', err: err });
-        });
+            res.json(user);
+        }).catch(err => { res.json({ msg: 'User not found', err: err }); });
     } else
         res.json({ msg: 'Bad entry...' });
 

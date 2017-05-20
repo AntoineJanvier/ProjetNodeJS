@@ -150,6 +150,7 @@ router.get('/pending_requests',  (req, res) => {
         }).catch(err => { res.json({ msg: 'UserA not found...', err: err }); });
     }
 });
+
 router.get('/pending_requests_count',  (req, res) => {
     res.type('json');
 
@@ -169,6 +170,7 @@ router.get('/pending_requests_count',  (req, res) => {
         }).catch(err => { res.json({ msg: 'UserA not found...', err: err }); });
     }
 });
+
 router.post('/request_decision',  (req, res) => {
     res.type('json');
     sess = req.session;
@@ -211,19 +213,21 @@ router.post('/external_relationships/create',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
+
 router.post('/external_relationships/edit',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
+
 router.post('/external_relationships/remove',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
+
 router.post('/external_relationships/list',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
-
 
 /**
  * IF WE HAVE TIME...
