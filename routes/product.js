@@ -8,6 +8,7 @@ const models = require('../models');
 const User = models.User;
 const Like = models.Like;
 const Product = models.Product;
+const UserProduct = models.UserProduct;
 
 let sess;
 
@@ -98,9 +99,6 @@ router.get('/like', (req, res) => {
     }
 });
 
-/**
- * TODO : Like a product => Create a 'Like', assign to user_id & product_id
- */
 router.post('/like_product', (req, res) => {
     res.type('json');
     sess = req.session;
@@ -113,7 +111,6 @@ router.post('/like_product', (req, res) => {
                 where: { email: sess.email }
             }).then(user => {
                 return Product.findById(p_id).then(product => {
-
                     return Like.find({
                         where: { user: user.userid, fk_Product: product.productid },
                         paranoid: false
@@ -141,25 +138,62 @@ router.post('/like_product', (req, res) => {
     }
 });
 
-router.get('/consumption', (req, res) => {
+
+router.post('/scan', (req, res) => {
     res.type('json');
-    res.json({ msg: 'ok' });
+    sess = req.session;
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        let b = req.body.barecode;
+        if (b) {
+            Product.find({
+                where: { barecode: b }
+            }).then(p => {
+                if (p) {
+                    return p.update({
+                        amount: (p.amount + 1)
+                    }).then(() => {
+                        res.json({ msg: 'Product added' });
+                    }).catch(err => { res.json({ msg: 'Unable to update product', err: err }); });
+                } else
+                    res.json({ msg: 'Product not found / Not referenced' });
+            }).catch(err => { res.json({ msg: 'Unable to find product', err: err }); });
+        } else
+            res.json({ msg: 'Bad entry...' });
+    }
 });
 
-/**
- * TODO : Search a product within its barecode
- */
-router.get('/scan', (req, res) => {
+router.post('/ownership', (req, res) => {
     res.type('json');
-    res.json({ msg: 'ok' });
-});
-
-/**
- * TODO : Find to whom the product belongs
- */
-router.get('/ownership', (req, res) => {
-    res.type('json');
-    res.json({ msg: 'ok' });
+    sess = req.session;
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        let p_id = req.body.idProduct;
+        if (p_id) {
+            Product.find({
+                where: { productid: p_id }
+            }).then(p => {
+                if (p) {
+                    return UserProduct.findAll({
+                        where: { fk_Product: p.productid }
+                    }).then(ups => {
+                        let res_ups = [];
+                        for (let up of ups) {
+                            if (up.status === 'OWNED')
+                                res_ups.push('OWNER: ' + up.user);
+                            else
+                                res_ups.push('    BORROWER: ' + up.user);
+                        }
+                        res.json(res_ups);
+                    }).catch(err => { res.json({ msg: 'Unable to find UserProducts', err: err }); });
+                } else
+                    res.json({ msg: 'Product not found / Not referenced' });
+            }).catch(err => { res.json({ msg: 'Unable to find product', err: err }); });
+        } else
+            res.json({ msg: 'Bad entry...' });
+    }
 });
 
 /**
@@ -206,6 +240,14 @@ router.get('/reviews/report', (req, res) => {
  * TODO : List all categories of products (Books, Musics, etc...)
  */
 router.get('/categories/list', (req, res) => {
+    res.type('json');
+    res.json({ msg: 'ok' });
+});
+
+/**
+ * TODO : Know what to do with this route
+ */
+router.get('/consumption', (req, res) => {
     res.type('json');
     res.json({ msg: 'ok' });
 });
