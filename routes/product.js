@@ -10,6 +10,7 @@ const Like = models.Like;
 const Product = models.Product;
 const UserProduct = models.UserProduct;
 const Comment = models.Comment;
+const Category = models.Category;
 
 let sess;
 
@@ -298,9 +299,6 @@ router.delete('/reviews/remove', (req, res) => {
     }
 });
 
-/**
- * TODO : Flag a review of a product as 'Reported'
- */
 router.post('/reviews/report', (req, res) => {
     res.type('json');
     sess = req.session;
@@ -323,12 +321,19 @@ router.post('/reviews/report', (req, res) => {
     }
 });
 
-/**
- * TODO : List all categories of products (Books, Musics, etc...)
- */
 router.get('/categories/list', (req, res) => {
     res.type('json');
-    res.json({ msg: 'ok' });
+    sess = req.session;
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        Category.findAll().then(categories => {
+            let res_c = [];
+            for (let c of categories)
+                res_c.push(c.responsify());
+            res.json(res_c);
+        }).catch(err => { res.json({ msg: 'Unable to find categories', err: err }); });
+    }
 });
 
 /**

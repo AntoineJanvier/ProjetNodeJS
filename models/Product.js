@@ -10,8 +10,7 @@ module.exports = (sequelize, DataTypes) => {
             name: { type: DataTypes.STRING },
             amount: { type: DataTypes.BIGINT },
             price: { type: DataTypes.FLOAT },
-            barecode: { type: DataTypes.STRING },
-            borrowed: { type: DataTypes.BOOLEAN }
+            barecode: { type: DataTypes.STRING }
         },
         {
             paranoid: true,
@@ -19,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
             freezeTableName: true,
             classMethods: {
                 associate: function (models) {
+                    Product.belongsTo(models.Category);
                 }
             },
             instanceMethods: {
