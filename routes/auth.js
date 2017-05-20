@@ -46,24 +46,26 @@ router.post('/log_in', function (req, res) {
     sess = req.session;
     if (sess.email)
         res.json({ msg: 'Already connected, please disconnect before a new connection...' });
-    let u_email = req.body.email;
-    let u_pwd = req.body.pwd;
-    if(u_email && u_pwd) {
-        User.find({
-            where: { 'email': u_email, 'pwd': u_pwd }
-        }).then(user => {
-            if(user) {
-                sess.userid = user.userid;
-                sess.first_name = user.first_name;
-                sess.last_name = user.last_name;
-                sess.age = user.age;
-                sess.email = user.email;
-                res.json({ User: user.responsify(), Session: sess });
-            } else
-                res.json({ msg: 'User not found' });
-        }).catch(err => { res.json({ msg: 'User not found', err: err }); });
-    } else
-        res.json({ msg: 'Bad entry...' });
+    else {
+        let u_email = req.body.email;
+        let u_pwd = req.body.pwd;
+        if(u_email && u_pwd) {
+            User.find({
+                where: { 'email': u_email, 'pwd': u_pwd }
+            }).then(user => {
+                if(user) {
+                    sess.userid = user.userid;
+                    sess.first_name = user.first_name;
+                    sess.last_name = user.last_name;
+                    sess.age = user.age;
+                    sess.email = user.email;
+                    res.json({ User: user.responsify(), Session: sess });
+                } else
+                    res.json({ msg: 'User not found' });
+            }).catch(err => { res.json({ msg: 'User not found', err: err }); });
+        } else
+            res.json({ msg: 'Bad entry...' });
+    }
 });
 
 router.get('/log_out', (req, res) => {
