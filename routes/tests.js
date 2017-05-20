@@ -8,6 +8,8 @@ const User = models.User;
 const Product = models.Product;
 const Friend = models.Friend;
 const UserProduct = models.UserProduct;
+const Comment = models.Comment;
+const Like = models.Like;
 
 router.get('/fill_database', (req, res) => {
     /**
@@ -61,6 +63,42 @@ router.get('/fill_database', (req, res) => {
         user: 5,
         fk_Product: 1
     });
+
+    /**
+     * Comments
+     */
+    Comment.create({
+        user: 3,
+        text: 'Bonjour je suis 3',
+        fk_Product: 1
+    });
+    Comment.create({
+        user: 2,
+        text: 'Moi c\'est 2 !',
+        fk_Product: 1
+    });
+    Comment.create({
+        user: 2,
+        text: 'Moi c\'est 2 aussi !',
+        fk_Product: 2
+    });
+
+    /**
+     * Likes
+     */
+    Like.create({
+        user: 2,
+        fk_Product: 1
+    });
+    Like.create({
+        user: 2,
+        fk_Product: 2
+    });
+    Like.create({
+        user: 3,
+        fk_Product: 1
+    });
+
 
     res.type('json');
     res.json({

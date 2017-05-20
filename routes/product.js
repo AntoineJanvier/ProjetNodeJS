@@ -301,9 +301,26 @@ router.delete('/reviews/remove', (req, res) => {
 /**
  * TODO : Flag a review of a product as 'Reported'
  */
-router.get('/reviews/report', (req, res) => {
+router.post('/reviews/report', (req, res) => {
     res.type('json');
-    res.json({ msg: 'ok' });
+    sess = req.session;
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        let c_id = req.body.idComment;
+        if (c_id) {
+            Comment.find({
+                where: { id: c_id }
+            }).then(c => {
+                return c.update({
+                    reported: true
+                }).then(c => {
+                    res.json({ msg: 'Comment reported', comment: c });
+                }).catch(err => { res.json({ msg: 'Unable to report comment', err: err }); });
+            }).catch(err => { res.json({ msg: 'Unable to find comment', err: err }); });
+        } else
+            res.json({ msg: 'Bad entry...' });
+    }
 });
 
 /**

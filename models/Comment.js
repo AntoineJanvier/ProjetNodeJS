@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         text: {
             type: DataTypes.STRING
+        },
+        reported: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
     }, {
         paranoid: true,
