@@ -47,7 +47,6 @@ router.post('/request', (req, res) => {
                 return User.find({
                     where: { userid: id_u2 }
                 }).then(u2 => {
-
                     return Friend.find({
                         where: { status: 'PENDING', user: u1.userid, fk_User: u2.userid }
                     }).then(f => {
@@ -66,7 +65,6 @@ router.post('/request', (req, res) => {
                             }).catch(err => { res.json({ msg: 'Unable to create a friend relationship...', err: err }); });
                         }
                     }).catch(err => { res.json({ msg: 'Error getting friend relation', err: err }); });
-
                 }).catch(err => { res.json({ msg: 'UserB not found...', err: err }); });
             }).catch(err => { res.json({ msg: 'UserA not found...', err: err }); });
         } else
@@ -74,7 +72,7 @@ router.post('/request', (req, res) => {
     }
 });
 
-router.post('/pending_requests',  (req, res) => {
+router.get('/pending_requests',  (req, res) => {
     res.type('json');
 
     sess = req.session;
@@ -96,7 +94,7 @@ router.post('/pending_requests',  (req, res) => {
         }).catch(err => { res.json({ msg: 'UserA not found...', err: err }); });
     }
 });
-router.post('/pending_requests_count',  (req, res) => {
+router.get('/pending_requests_count',  (req, res) => {
     res.type('json');
 
     sess = req.session;
@@ -117,8 +115,42 @@ router.post('/pending_requests_count',  (req, res) => {
 });
 router.post('/request_decision',  (req, res) => {
     res.type('json');
-    res.json({ msg: 'OK' });
+    sess = req.session;
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        let d = req.body.decision;
+        let id_user2 = req.body.idUser2;
+        if (d && id_user2) {
+            let decision = check_decision(d);
+            if (id_user2)
+                User.find({
+                    where: { email: sess.email }
+                }).then(u1 => {
+                    return User.findById(id_user2).then(u2 => {
+                        return Friend.find({
+                            where: { user: u2.userid, fk_User: u1.userid }
+                        }).then(f => {
+                            return f.update({
+                                status: decision
+                            }).then(() => {
+                                res.json({ msg: 'Decision applied !' });
+                            }).catch(err => { res.json({ msg: 'Can\'t update relation...', err: err }); });
+                        }).catch(err => { res.json({ msg: 'No relation', err: err }); });
+                    }).catch(err => { res.json({ msg: 'Error while getting user2', err: err }); });
+                }).catch(err => { res.json({ msg: 'UserA not found...', err: err }); });
+        } else
+            res.json({ msg: 'Bad entry...' });
+    }
 });
+
+function check_decision(d) {
+    if (d === 'ACCEPTED' || d === 'REJECTED' || d === 'BLOCKED')
+        return d;
+    else
+        return 'REJECTED';
+}
+
 router.post('/external_relationships/create',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
