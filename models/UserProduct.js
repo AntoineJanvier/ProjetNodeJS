@@ -10,6 +10,9 @@ module.exports = (sequelize, DataTypes) => {
         user: {
             type: DataTypes.BIGINT,
             foreignKey: true
+        },
+        status: {
+            type: DataTypes.STRING
         }
     }, {
         paranoid: true,

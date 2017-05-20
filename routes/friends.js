@@ -12,9 +12,7 @@ let sess;
 
 router.get('/list',  (req, res) => {
     res.type('json');
-
     sess = req.session;
-
     if (!sess.email)
         res.json({ msg: 'Not connected...' });
     else {
@@ -32,11 +30,10 @@ router.get('/list',  (req, res) => {
         }).catch(err => { res.json({ msg: 'UserA not found...', err: err }); });
     }
 });
+
 router.post('/search',  (req, res) => {
     res.type('json');
-
     sess = req.session;
-
     if (!sess.email)
         res.json({ msg: 'Not connected...' });
     else {
@@ -54,6 +51,7 @@ router.post('/search',  (req, res) => {
         }).catch(err => { res.json({ msg: 'UserA not found...', err: err }); });
     }
 });
+
 router.post('/remove', (req, res) => {
     res.type('json');
     sess = req.session;
@@ -80,11 +78,11 @@ router.post('/remove', (req, res) => {
             res.json({ msg: 'Bad entry...' });
     }
 });
+
+/**
+ * TODO : Find what /join means here & what to do...
+ */
 router.post('/join',  (req, res) => {
-    res.type('json');
-    res.json({ msg: 'OK' });
-});
-router.post('/remove',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
 });
