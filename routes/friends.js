@@ -2,10 +2,13 @@
 
 let express = require('express');
 let router = express.Router();
+let session = require('express-session');
 
 const models = require('../models');
 const User = models.User;
 const Friend = models.Friend;
+
+let sess;
 
 router.get('/list',  (req, res) => {
     res.type('json');
@@ -28,57 +31,89 @@ router.post('/remove',  (req, res) => {
     res.json({ msg: 'OK' });
 });
 
-/**
- * TODO : Test associations User => User (hasMany is preconized in the doc)
- */
 router.post('/request', (req, res) => {
     res.type('json');
 
-    let id_u1 = req.body.id_user1;
-    let id_u2 = req.body.id_user2;
+    sess = req.session;
 
-    if (id_u1 && id_u2) {
-        User.find({
-            where: { id: id_u1 }
-        }).then(u1 => {
-            return User.find({
-                where: { id: id_u2 }
-            }).then(u2 => {
-                Friend.create({
-                    User: u1,
-                    Friend: u2
-                }).then(f => {
-                    res.json({ msg: 'Add friend ok', Friend: f });
-                }).catch(err => {
-                    res.json({ msg: 'Unable to create a friend relationship...', err: err });
-                })
-                // u1.addUser(u2, { through: {status: 'Pending'} });
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        let id_u2 = req.body.id_user2;
+        if (id_u2) {
+            User.find({
+                where: { email: sess.email }
+            }).then(u1 => {
+                return User.find({
+                    where: { userid: id_u2 }
+                }).then(u2 => {
 
-                // return u2.update({
-                //     User: u2.User + u1
-                // }).then(() => {
-                //     res.json({ msg: 'User' + u1.id + ' requested User' + u2.id});
-                // }).catch(err => {
-                //     res.json({ msg: 'Error while requesting friend from UserA to UserB', err: err});
-                // });
-            }).catch(err => {
-                res.json({ msg: 'UserB not found...', err: err });
-            })
-        }).catch(err => {
-            res.json({ msg: 'UserA not found...', err: err });
-        });
-    } else
-        res.json({ msg: 'Bad entry...' });
+                    return Friend.find({
+                        where: { status: 'PENDING', user: u1.userid, fk_User: u2.userid }
+                    }).then(f => {
+                        if (f)
+                            res.json({ msg: 'You already have requested this user( ' + f.fk_User + ' )' });
+                        else {
+                            return Friend.create({
+                                status: "PENDING",
+                                user: u1.userid
+                            }).then(f => {
+                                return f.update({
+                                    fk_User: u2.userid
+                                }).then(() => {
+                                    res.json({ msg: 'Add OK' });
+                                }).catch(err => { res.json({ msg: 'Error on update to set user2 (the friend)', err: err }); });
+                            }).catch(err => { res.json({ msg: 'Unable to create a friend relationship...', err: err }); });
+                        }
+                    }).catch(err => { res.json({ msg: 'Error getting friend relation', err: err }); });
 
+                }).catch(err => { res.json({ msg: 'UserB not found...', err: err }); });
+            }).catch(err => { res.json({ msg: 'UserA not found...', err: err }); });
+        } else
+            res.json({ msg: 'Bad entry...' });
+    }
 });
 
 router.post('/pending_requests',  (req, res) => {
     res.type('json');
-    res.json({ msg: 'OK' });
+
+    sess = req.session;
+
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        User.find({
+            where: { email: sess.email }
+        }).then(u1 => {
+            return Friend.findAll({
+                where: { status: 'PENDING', user: u1.userid }
+            }).then(friends => {
+                let res_friends = [];
+                for (let f of friends)
+                    res_friends.push(f.fk_User);
+                res.json({ NB_OF_FRIENDS: friends.length, friends_ids: res_friends });
+            }).catch(err => { res.json({ msg: 'Enable to find friends', err: err }); });
+        }).catch(err => { res.json({ msg: 'UserA not found...', err: err }); });
+    }
 });
 router.post('/pending_requests_count',  (req, res) => {
     res.type('json');
-    res.json({ msg: 'OK' });
+
+    sess = req.session;
+
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        User.find({
+            where: { email: sess.email }
+        }).then(u1 => {
+            return Friend.findAll({
+                where: { status: 'PENDING', user: u1.userid }
+            }).then(friends => {
+                res.json({ NB_OF_FRIENDS: friends.length });
+            }).catch(err => { res.json({ msg: 'Enable to find friends', err: err }); });
+        }).catch(err => { res.json({ msg: 'UserA not found...', err: err }); });
+    }
 });
 router.post('/request_decision',  (req, res) => {
     res.type('json');

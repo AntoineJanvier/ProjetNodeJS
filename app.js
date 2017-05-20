@@ -7,9 +7,7 @@ const logger = require('morgan');
 const path = require('path');
 
 const models = require('./models');
-models.sequelize.sync({
-    force: true
-});
+models.sequelize.sync();
 
 /**
  * Get routes for the application

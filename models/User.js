@@ -29,15 +29,10 @@ module.exports = (sequelize, DataTypes) => {
             },
             instanceMethods: {
                 responsify: () => {
-                    if (this.Product)
-                        for(let p of this.Product)
-                            p = p.responsify();
                     return {
-                        first_name: this.first_name,
-                        last_name: this.last_name,
-                        age: this.age,
+                        name: this.first_name + ' ' + this.last_name,
                         email: this.email,
-                        products: this.Product
+                        age: this.age
                     };
                 }
             }

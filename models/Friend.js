@@ -9,6 +9,26 @@ module.exports = (sequelize, DataTypes) => {
         },
         status: {
             type: DataTypes.STRING
+        },
+        user: {
+            type: DataTypes.BIGINT,
+            foreignKey: true
+        }
+    }, {
+        paranoid: true,
+        underscored: true,
+        freezeTableName: true,
+        classMethods: {
+            associate: function (models) {
+                Friend.belongsTo(models.User, {
+                    foreignKey: 'fk_User'
+                });
+            }
+        },
+        instanceMethods: {
+            responsify: () => {
+                return {};
+            }
         }
     });
     return Friend;

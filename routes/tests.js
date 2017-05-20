@@ -39,7 +39,7 @@ router.get('/fill_database', (req, res) => {
      */
 
     Product.create({ name: "Doctor Who", amount: 3, price: 119.99, barecode: "001275468953", User:
-        User.find({ "where": { "id": 3 } }).then(user => { u = user; }).catch(err => { console.log('nok' + err); })
+        User.find({ where: { userid: 3 } }).then(user => { u = user; }).catch(err => { console.log('nok' + err); })
     }).then(p => {
         if(p) { cmp2++ } else { console.log("Product not created"); }
     }).catch(err => { throw err; });
