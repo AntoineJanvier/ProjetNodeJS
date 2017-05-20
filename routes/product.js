@@ -266,7 +266,7 @@ router.post('/reviews/edit', (req, res) => {
                         text: t
                     }).then(c => {
                         res.json({ msg: 'Comment updated', comment: c });
-                    }).catch(err => { res.json({ msg: 'Unable to udpate comment', err: err }); });
+                    }).catch(err => { res.json({ msg: 'Unable to update comment', err: err }); });
                 }).catch(err => { res.json({ msg: 'Unable to find comment', err: err }); });
             }).catch(err => { res.json({ msg: 'Unable to find user', err: err }); });
         } else
@@ -274,12 +274,28 @@ router.post('/reviews/edit', (req, res) => {
     }
 });
 
-/**
- * TODO : Delete a review of a product
- */
-router.get('/reviews/remove', (req, res) => {
+router.delete('/reviews/remove', (req, res) => {
     res.type('json');
-    res.json({ msg: 'ok' });
+    sess = req.session;
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        let c_id = req.body.idComment;
+        if (c_id) {
+            User.find({
+                where: { email: sess.email }
+            }).then(u => {
+                return Comment.find({
+                    where: { id: c_id, user: u.userid }
+                }).then(c => {
+                    return c.destroy().then(c => {
+                        res.json({ msg: 'Comment deleted', comment: c });
+                    }).catch(err => { res.json({ msg: 'Unable to delete comment', err: err }); });
+                }).catch(err => { res.json({ msg: 'Unable to find comment', err: err }); });
+            }).catch(err => { res.json({ msg: 'Unable to find user', err: err }); });
+        } else
+            res.json({ msg: 'Bad entry...' });
+    }
 });
 
 /**
