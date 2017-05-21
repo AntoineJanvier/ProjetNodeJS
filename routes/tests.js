@@ -53,6 +53,7 @@ router.get('/fill_database', (req, res) => {
      */
     UserProduct.create({ status: 'OWNED', user: 5, fk_Product: 2 });
     UserProduct.create({ status: 'BORROWED', user: 5, fk_Product: 1 });
+    UserProduct.create({ status: 'PENDING', user: 3, fk_Product: 1 });
 
     /**
      * Comments

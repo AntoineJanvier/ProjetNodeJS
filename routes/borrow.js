@@ -29,21 +29,6 @@ router.get('/list', (req, res) => {
             }).catch(err => { res.json({ msg: 'Can\'t find user products', err: err }); });
         }).catch(err => { res.json({ msg: 'Can\'t find user', err: err }); });
     }
-
-    // User.findAll({
-    //     include: [{
-    //         model: Product
-    //     }]
-    // }).then(users => {
-    //     let result = [];
-    //     for (let u of users)
-    //         if(u.Products.length >= 1)
-    //             for (let up of u.Products)
-    //                 result.push(up['UserProducts'])
-    //     res.json(result);
-    // }).catch(err => {
-    //     res.json({ msg: 'Error finding all users...', err: err });
-    // });
 });
 
 router.post('/request', (req, res) => {
@@ -85,31 +70,89 @@ router.post('/request', (req, res) => {
         } else
             res.json({ msg: 'Bad entry...' });
     }
+});
 
-    // let user_id = parseInt(req.body.user_id);
-    // let product_id = parseInt(req.body.product_id);
-    //
-    // if (user_id && product_id) {
-    //     User.findById(user_id).then((user) => {
-    //         return Product.findById(product_id).then((product) => {
-    //             return user.addProduct(product).then(() => {
-    //                 res.json({ msg: 'Assertion ok' });
-    //             });
-    //         }).catch((err) => {
-    //             res.json({msg: 'Error asserting product...', err: err});
-    //         });
-    //     }).catch((err) => {
-    //         res.json({msg: 'Error getting user...', err: err});
-    //     });
-    // } else
-    //     res.json({ msg: 'Bad entry...' });
+/**
+ * TODO : Owner of product (owner_id, product_id) accept request to borrow request_id => BORROWED
+ */
+router.post('/request_accept', (req, res) => {
+    res.type('json');
+    sess = req.session;
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        let id_user = req.body.idUser;
+        let id_product = req.body.idProduct;
+        if (id_user && id_product)
+            User.find({
+                where: { email: sess.email }
+            }).then(owner => {
+                if (owner)
+                    return Product.find({
+                        where: { productid: id_product }
+                    }).then(p => {
+                        if (p)
+                            return UserProduct.find({
+                                where: { user: owner.userid, fk_Product: p.userid, status: 'PENDING' }
+                            }).then(up => {
+                                if (up)
+                                    return UserProduct.find({
+                                        where: { user: id_user, fk_Product: p.userid, status: 'PENDING' }
+                                    }).then(up2update => {
+                                        if (up2update)
+                                            return up2update.update({
+                                                status: 'BORROWED'
+                                            }).then(() => {
+                                                res.json({ msg: 'Borrow accepted' });
+                                            }).catch(err => { res.json({ catch_msg: 'Unable to update borrow', err: err }); });
+                                        else
+                                            res.json({ error_msg: 'UserProduct - Not found' });
+                                    }).catch(err => { res.json({ catch_msg: 'Unable to find user product to update', err: err }); });
+                                else
+                                    res.json({ error_msg: 'UserProduct - Not found' });
+                            }).catch(err => { res.json({ msg: 'Error getting friend relation', err: err }); });
+                        else
+                            res.json({ error_msg: 'Product - Not found' });
+                    }).catch(err => { res.json({ msg: 'Product not found...', err: err }); });
+                else
+                    res.json({ error_msg: 'User - Not found' });
+            }).catch(err => { res.json({ msg: 'User not found...', err: err }); });
+        else
+            res.json({ msg: 'Bad entry...' });
+    }
 });
 
 router.get('/pending_request', (req, res) => {
     res.type('json');
-    res.json({
-        msg: 'ok'
-    });
+
+    sess = req.session;
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        User.find({
+            where: { email: sess.email }
+        }).then(user => {
+            if (user)
+                return UserProduct.findAll({
+                    where: { status: 'OWNED', user: user.userid }
+                }).then(ups => {
+                    if (ups) {
+                        let r = [];
+                        for (let up of ups) {
+                            UserProduct.find({
+                                where: { status: 'PENDING', fk_Product: up.fk_Product }
+                            }).then(_up => {
+                                r.push(_up);
+                            });
+                        }
+                        res.json(r);
+                    } else
+                        res.json({ error_msg: 'UserProduct(s) - Not found' });
+                }).catch(err => { res.json({ catch_msg: 'Unable to find UserProducts', err: err }); });
+            else
+                res.json({ error_msg: 'User - Not found' });
+        }).catch(err => { res.json({ catch_msg: 'Unable to find user', err: err }); });
+    }
 });
 
 router.get('/reminder', (req, res) => {

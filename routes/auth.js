@@ -17,7 +17,8 @@ router.post('/subscribe', (req, res) => {
     let u_age = parseInt(req.body.age);
     let u_pwd = req.body.pwd;
     if(u_firstname && u_lastname && u_age && u_email && u_pwd) {
-        User.find({ attributes: ['email'], where: { email: u_email }
+        User.find({
+            attributes: ['email'], where: { email: u_email }
         }).then(user => {
             if(user) {
                 res.json({msg: 'User already created...', err: {} });
