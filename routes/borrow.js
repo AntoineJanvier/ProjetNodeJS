@@ -33,14 +33,12 @@ router.get('/list', (req, res) => {
 
 router.post('/request', (req, res) => {
     res.type('json');
-
     sess = req.session;
-
     if (!sess.email)
         res.json({ msg: 'Not connected...' });
     else {
         let id_product = req.body.idProduct;
-        if (id_product) {
+        if (id_product)
             User.find({
                 where: { email: sess.email }
             }).then(u => {
@@ -52,10 +50,9 @@ router.post('/request', (req, res) => {
                     }).then(up => {
                         if (up)
                             res.json({ msg: 'You already have requested this product( ' + up.fk_Product + ' )' });
-                        else {
+                        else
                             return UserProduct.create({
-                                user: u.userid,
-                                status: 'PENDING'
+                                user: u.userid, status: 'PENDING'
                             }).then(up => {
                                 return up.update({
                                     fk_Product: p.productid
@@ -63,18 +60,14 @@ router.post('/request', (req, res) => {
                                     res.json({ msg: 'Add OK' });
                                 }).catch(err => { res.json({ msg: 'Error on update to set product', err: err }); });
                             }).catch(err => { res.json({ msg: 'Unable to create a user-product...', err: err }); });
-                        }
                     }).catch(err => { res.json({ msg: 'Error getting friend relation', err: err }); });
                 }).catch(err => { res.json({ msg: 'Product not found...', err: err }); });
             }).catch(err => { res.json({ msg: 'User not found...', err: err }); });
-        } else
+        else
             res.json({ msg: 'Bad entry...' });
     }
 });
 
-/**
- * TODO : Owner of product (owner_id, product_id) accept request to borrow request_id => BORROWED
- */
 router.post('/request_accept', (req, res) => {
     res.type('json');
     sess = req.session;
@@ -124,7 +117,6 @@ router.post('/request_accept', (req, res) => {
 
 router.get('/pending_request', (req, res) => {
     res.type('json');
-
     sess = req.session;
     if (!sess.email)
         res.json({ msg: 'Not connected...' });
