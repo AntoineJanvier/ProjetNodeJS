@@ -130,14 +130,18 @@ router.get('/pending_request', (req, res) => {
                 }).then(ups => {
                     if (ups) {
                         let r = [];
+
                         for (let up of ups) {
-                            UserProduct.find({
-                                where: { status: 'PENDING', fk_Product: up.fk_Product }
-                            }).then(_up => {
-                                r.push(_up);
-                            });
+                            r.push(up.id);
                         }
-                        res.json(r);
+                        return UserProduct.findAll({
+                            where: { status: 'PENDING', fk_Product: { $in: r } }
+                        }).then(_ups => {
+                            for (let _up of _ups) {
+                                _up = _up.responsify();
+                            }
+                            res.json(_ups);
+                        }).catch(err => { res.json({ catch_msg: 'Unable to find UserProducts', err: err }); });
                     } else
                         res.json({ error_msg: 'UserProduct(s) - Not found' });
                 }).catch(err => { res.json({ catch_msg: 'Unable to find UserProducts', err: err }); });
