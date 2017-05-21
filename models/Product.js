@@ -25,10 +25,8 @@ module.exports = (sequelize, DataTypes) => {
                 responsify: function() {
                     return {
                         name: this.name,
-                        number_in_stock: this.amount,
-                        price: this.price,
+                        stock_price: this.amount + ' x ' + this.price,
                         code: this.barecode,
-                        borrowed: this.borrowed
                     };
                 }
             }

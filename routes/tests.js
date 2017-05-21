@@ -11,6 +11,7 @@ const UserProduct = models.UserProduct;
 const Comment = models.Comment;
 const Like = models.Like;
 const Category = models.Category;
+const Wish = models.Wish;
 
 router.get('/fill_database', (req, res) => {
     /**
@@ -35,14 +36,10 @@ router.get('/fill_database', (req, res) => {
      * Generate products
      */
     Product.create({ name: "Doctor Who", amount: 3, price: 119.99, barecode: "001275468953" }).then(p => {
-        p.update({
-            category_id: 4
-        })
+        p.update({ category_id: 4 })
     });
     Product.create({ name: "My Little Poney", amount: 15, price: 3.56, barecode: "016956332552" }).then(p => {
-        p.update({
-            category_id: 1
-        })
+        p.update({ category_id: 1 })
     });
 
     /**
@@ -71,6 +68,12 @@ router.get('/fill_database', (req, res) => {
     Like.create({ user: 2, fk_Product: 2 });
     Like.create({ user: 3, fk_Product: 1 });
 
+    /**
+     * Wishes
+     */
+    Wish.create({ user: 2, fk_Product: 1 });
+    Wish.create({ user: 2, fk_Product: 2 });
+    Wish.create({ user: 3, fk_Product: 2 });
 
     res.type('json');
     res.json({ msg: 'ok' });
