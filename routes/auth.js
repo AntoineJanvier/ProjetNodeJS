@@ -42,7 +42,7 @@ router.post('/subscribe', (req, res) => {
         res.json({ msg: 'Bad entry...' });
 });
 
-router.post('/log_in', function (req, res) {
+router.post('/log_in', (req, res) => {
     res.type('json');
     sess = req.session;
     if (sess.email)

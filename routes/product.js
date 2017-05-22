@@ -24,13 +24,13 @@ router.post('/create', (req, res) => {
     let p_price = parseFloat(req.body.price);
     let p_barecode = req.body.barecode;
 
-    if(p_name && p_amount && p_price && p_barecode) {
+    if(p_name && p_amount && p_price && p_barecode)
         Product.find({
             where: { barecode: p_barecode }
         }).then(product => {
-            if(product) {
+            if(product)
                 res.json({ msg: 'Product already created...', err: {} });
-            } else {
+            else
                 Product.create({
                     name: p_name, amount: p_amount, price: p_price, barecode: p_barecode
                 }).then(p => {
@@ -39,9 +39,8 @@ router.post('/create', (req, res) => {
                     else
                         res.json({ error: 'Error while creating product' });
                 }).catch(err => { throw err; });
-            }
         }).catch(err => { res.json({ error: 'Error...', err: err }); });
-    } else
+    else
         res.json({ msg: 'Bad entry...' });
 });
 
@@ -63,9 +62,7 @@ router.get('/list', (req, res) => {
         for (let p of products)
             resp.push(p.responsify())
         res.json(resp);
-    }).catch(err => {
-        res.json({msg: "Products not found", err: err });
-    });
+    }).catch(err => { res.json({msg: "Products not found", err: err }); });
 });
 
 router.get('/random', (req, res) => {
@@ -88,7 +85,7 @@ router.get('/like', (req, res) => {
 
     if (!sess.email)
         res.json({ msg: 'Not connected...' });
-    else {
+    else
         User.find({
             where: { email: sess.email }
         }).then(u => {
@@ -98,7 +95,6 @@ router.get('/like', (req, res) => {
                 res.json(likes);
             }).catch(err => { res.json({ msg: 'Unable to find Likes', err: err }); });
         }).catch(err => { res.json({ msg: 'Unable to find user', err: err }); });
-    }
 });
 
 router.post('/like_product', (req, res) => {
@@ -148,7 +144,7 @@ router.post('/scan', (req, res) => {
         res.json({ msg: 'Not connected...' });
     else {
         let b = req.body.barecode;
-        if (b) {
+        if (b)
             Product.find({
                 where: { barecode: b }
             }).then(p => {
@@ -161,7 +157,7 @@ router.post('/scan', (req, res) => {
                 } else
                     res.json({ msg: 'Product not found / Not referenced' });
             }).catch(err => { res.json({ msg: 'Unable to find product', err: err }); });
-        } else
+        else
             res.json({ msg: 'Bad entry...' });
     }
 });
@@ -206,7 +202,7 @@ router.post('/reviews/list', (req, res) => {
         res.json({ msg: 'Not connected...' });
     else {
         let p_id = parseInt(req.body.idProduct);
-        if (p_id) {
+        if (p_id)
             Comment.findAll({
                 where: { fk_Product: p_id }
             }).then(cs => {
@@ -215,10 +211,8 @@ router.post('/reviews/list', (req, res) => {
                 for (let c of cs)
                     res_c.push(c.responsify());
                 res.json(res_c);
-            }).catch(err => {
-                res.json({ msg: 'Unable to find comments', err: err });
-            })
-        } else
+            }).catch(err => { res.json({ msg: 'Unable to find comments', err: err }); });
+        else
             res.json({ msg: 'Bad entry...' });
     }
 });
@@ -232,7 +226,7 @@ router.post('/reviews/create', (req, res) => {
         let p_id = req.body.idProduct;
         let t = req.body.comment_text;
 
-        if (p_id && t) {
+        if (p_id && t)
             User.find({
                 where: { email: sess.email }
             }).then(u => {
@@ -242,7 +236,7 @@ router.post('/reviews/create', (req, res) => {
                     res.json({ msg: 'Comment inserted', comment: c });
                 }).catch(err => { res.json({ msg: 'Unable to create comment', err: err }); });
             }).catch(err => { res.json({ msg: 'Unable to find user', err: err }); });
-        } else
+        else
             res.json({ msg: 'Bad entry...' });
     }
 });

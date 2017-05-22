@@ -68,7 +68,7 @@ router.post('/remove', (req, res) => {
         res.json({ msg: 'You are not connected' });
     else {
         let wish_id = req.body.idWish;
-        if (wish_id) {
+        if (wish_id)
             Wish.findById(wish_id).then(w => {
                 if (w)
                     w.destroy().then(() => {
@@ -77,7 +77,7 @@ router.post('/remove', (req, res) => {
                 else
                     res.json({ error_msg: 'Wish not found' });
             }).catch(err => { res.json({ catch_msg: 'Unable to create wish', err: err }); });
-        } else
+        else
             res.json({ msg: 'Bad entry...' });
     }
 });
