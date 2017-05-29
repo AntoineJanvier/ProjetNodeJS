@@ -16,14 +16,11 @@ let sess;
 
 router.post('/create', (req, res) => {
     res.type('json');
-
     sess = req.session;
-
-    let p_name = req.body.name;
-    let p_amount = req.body.amount;
-    let p_price = parseFloat(req.body.price);
-    let p_barecode = req.body.barecode;
-
+    let p_name = req.body.name,
+        p_amount = req.body.amount,
+        p_price = parseFloat(req.body.price),
+        p_barecode = req.body.barecode;
     if(p_name && p_amount && p_price && p_barecode)
         Product.find({
             where: { barecode: p_barecode }
@@ -56,7 +53,6 @@ router.post('/get', (req, res) => {
 
 router.get('/list', (req, res) => {
     res.type('json');
-
     Product.findAll().then(products => {
         let resp = [];
         for (let p of products)
@@ -67,7 +63,6 @@ router.get('/list', (req, res) => {
 
 router.get('/random', (req, res) => {
     res.type('json');
-
     Product.count().then(nb => {
         let nb_rand = Math.round(Math.random() * nb);
         nb_rand = nb_rand === 0 ? nb_rand + 1 : nb_rand;
@@ -80,9 +75,7 @@ router.get('/random', (req, res) => {
 
 router.get('/like', (req, res) => {
     res.type('json');
-
     sess = req.session;
-
     if (!sess.email)
         res.json({ msg: 'Not connected...' });
     else
@@ -148,13 +141,13 @@ router.post('/scan', (req, res) => {
             Product.find({
                 where: { barecode: b }
             }).then(p => {
-                if (p) {
+                if (p)
                     return p.update({
                         amount: (p.amount + 1)
                     }).then(() => {
                         res.json({ msg: 'Product added' });
                     }).catch(err => { res.json({ msg: 'Unable to update product', err: err }); });
-                } else
+                else
                     res.json({ msg: 'Product not found / Not referenced' });
             }).catch(err => { res.json({ msg: 'Unable to find product', err: err }); });
         else
@@ -169,11 +162,11 @@ router.post('/ownership', (req, res) => {
         res.json({ msg: 'Not connected...' });
     else {
         let p_id = req.body.idProduct;
-        if (p_id) {
+        if (p_id)
             Product.find({
                 where: { productid: p_id }
             }).then(p => {
-                if (p) {
+                if (p)
                     return UserProduct.findAll({
                         where: { fk_Product: p.productid }
                     }).then(ups => {
@@ -186,17 +179,16 @@ router.post('/ownership', (req, res) => {
                         }
                         res.json(res_ups);
                     }).catch(err => { res.json({ msg: 'Unable to find UserProducts', err: err }); });
-                } else
+                else
                     res.json({ msg: 'Product not found / Not referenced' });
             }).catch(err => { res.json({ msg: 'Unable to find product', err: err }); });
-        } else
+        else
             res.json({ msg: 'Bad entry...' });
     }
 });
 
 router.post('/reviews/list', (req, res) => {
     res.type('json');
-
     sess = req.session;
     if (!sess.email)
         res.json({ msg: 'Not connected...' });
@@ -223,8 +215,8 @@ router.post('/reviews/create', (req, res) => {
     if (!sess.email)
         res.json({ msg: 'Not connected...' });
     else {
-        let p_id = req.body.idProduct;
-        let t = req.body.comment_text;
+        let p_id = req.body.idProduct,
+            t = req.body.comment_text;
 
         if (p_id && t)
             User.find({
@@ -247,10 +239,10 @@ router.post('/reviews/edit', (req, res) => {
     if (!sess.email)
         res.json({ msg: 'Not connected...' });
     else {
-        let c_id = req.body.idComment;
-        let t = req.body.comment_text;
+        let c_id = req.body.idComment,
+            t = req.body.comment_text;
 
-        if (c_id && t) {
+        if (c_id && t)
             User.find({
                 where: { email: sess.email }
             }).then(u => {
@@ -264,7 +256,7 @@ router.post('/reviews/edit', (req, res) => {
                     }).catch(err => { res.json({ msg: 'Unable to update comment', err: err }); });
                 }).catch(err => { res.json({ msg: 'Unable to find comment', err: err }); });
             }).catch(err => { res.json({ msg: 'Unable to find user', err: err }); });
-        } else
+        else
             res.json({ msg: 'Bad entry...' });
     }
 });
@@ -300,7 +292,7 @@ router.post('/reviews/report', (req, res) => {
         res.json({ msg: 'Not connected...' });
     else {
         let c_id = req.body.idComment;
-        if (c_id) {
+        if (c_id)
             Comment.find({
                 where: { id: c_id }
             }).then(c => {
@@ -310,7 +302,7 @@ router.post('/reviews/report', (req, res) => {
                     res.json({ msg: 'Comment reported', comment: c });
                 }).catch(err => { res.json({ msg: 'Unable to report comment', err: err }); });
             }).catch(err => { res.json({ msg: 'Unable to find comment', err: err }); });
-        } else
+        else
             res.json({ msg: 'Bad entry...' });
     }
 });
@@ -320,14 +312,13 @@ router.get('/categories/list', (req, res) => {
     sess = req.session;
     if (!sess.email)
         res.json({ msg: 'Not connected...' });
-    else {
+    else
         Category.findAll().then(categories => {
             let res_c = [];
             for (let c of categories)
                 res_c.push(c.responsify());
             res.json(res_c);
         }).catch(err => { res.json({ msg: 'Unable to find categories', err: err }); });
-    }
 });
 
 /**

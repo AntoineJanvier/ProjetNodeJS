@@ -15,11 +15,11 @@ router.post('/edit', (req, res) => {
     if (!sess.email)
         res.json({ msg: 'You are not connected' });
     else {
-        let u_email = req.body.email;
-        let u_firstname = req.body.first_name;
-        let u_lastname = req.body.last_name;
-        let u_age = parseInt(req.body.age);
-        let u_pwd = req.body.pwd;
+        let u_email = req.body.email,
+            u_firstname = req.body.first_name,
+            u_lastname = req.body.last_name,
+            u_age = parseInt(req.body.age),
+            u_pwd = req.body.pwd;
         if (u_email === sess.email)
             res.json({ msg: 'You can\'t modify yourself' });
         else {

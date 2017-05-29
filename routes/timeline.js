@@ -16,12 +16,10 @@ let sess;
 
 router.get('/get', (req, res) => {
     res.type('json');
-
     sess = req.session;
-
     if (!sess.email)
         res.json({ msg: 'Not connected...' });
-    else {
+    else
         User.find({
             where: { email: sess.email }
         }).then(u => {
@@ -56,7 +54,6 @@ router.get('/get', (req, res) => {
                 }).catch(err => { res.json({ catch_msg: 'Unable to find likes', err: err }); });
             }).catch(err => { res.json({ catch_msg: 'Unable to find comments', err: err }); });
         }).catch(err => { res.json({ catch_msg: 'Unable to find user', err: err }); });
-    }
 });
 
 module.exports = router;

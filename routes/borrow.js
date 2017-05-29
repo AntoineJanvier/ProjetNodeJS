@@ -13,12 +13,10 @@ let sess;
 
 router.get('/list', (req, res) => {
     res.type('json');
-
     sess = req.session;
-
     if (!sess.email)
         res.json({ msg: 'Not connected' });
-    else {
+    else
         User.find({
             where: { email: sess.email }
         }).then(u => {
@@ -28,7 +26,6 @@ router.get('/list', (req, res) => {
                 res.json(ups);
             }).catch(err => { res.json({ msg: 'Can\'t find user products', err: err }); });
         }).catch(err => { res.json({ msg: 'Can\'t find user', err: err }); });
-    }
 });
 
 router.post('/request', (req, res) => {
@@ -74,8 +71,8 @@ router.post('/request_accept', (req, res) => {
     if (!sess.email)
         res.json({ msg: 'Not connected...' });
     else {
-        let id_user = req.body.idUser;
-        let id_product = req.body.idProduct;
+        let id_user = req.body.idUser,
+            id_product = req.body.idProduct;
         if (id_user && id_product)
             User.find({
                 where: { email: sess.email }
@@ -120,7 +117,7 @@ router.get('/pending_request', (req, res) => {
     sess = req.session;
     if (!sess.email)
         res.json({ msg: 'Not connected...' });
-    else {
+    else
         User.find({
             where: { email: sess.email }
         }).then(user => {
@@ -143,17 +140,16 @@ router.get('/pending_request', (req, res) => {
             else
                 res.json({ error_msg: 'User - Not found' });
         }).catch(err => { res.json({ catch_msg: 'Unable to find user', err: err }); });
-    }
 });
 
-router.get('/reminder', (req, res) => {
+router.get('/edit', (req, res) => {
     res.type('json');
     res.json({
         msg: 'ok'
     });
 });
 
-router.get('/edit', (req, res) => {
+/*router.get('/reminder', (req, res) => {
     res.type('json');
     res.json({
         msg: 'ok'
@@ -172,6 +168,6 @@ router.get('/external_relationships/edit', (req, res) => {
     res.json({
         msg: 'ok'
     });
-});
+});*/
 
 module.exports = router;

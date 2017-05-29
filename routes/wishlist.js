@@ -13,14 +13,12 @@ let sess;
 
 router.post('/add', (req, res) => {
     res.type('json');
-
     sess = req.session;
-
     if (!sess.email)
         res.json({ msg: 'You are not connected' });
     else {
         let product_id = req.body.idProduct;
-        if (product_id) {
+        if (product_id)
             User.find({
                 where: { email: sess.email }
             }).then(u => {
@@ -35,17 +33,17 @@ router.post('/add', (req, res) => {
                     }).catch(err => { res.json({ catch_msg: 'Unable to create wish', err: err }); });
                 }).catch(err => { res.json({ catch_msg: 'Unable to find product', err: err }); });
             }).catch(err => { res.json({ catch_msg: 'Unable to find user', err: err }); });
-        } else
+        else
             res.json({ msg: 'Bad entry...' });
     }
-
 });
+
 router.get('/list', (req, res) => {
     res.type('json');
     sess = req.session;
     if (!sess.email)
         res.json({ msg: 'You are not connected' });
-    else {
+    else
         User.find({
             where: { email: sess.email }
         }).then(u => {
@@ -57,13 +55,11 @@ router.get('/list', (req, res) => {
                 res.json(res_wishes);
             }).catch(err => { res.json({ catch_msg: 'Unable to find wishes', err: err }); });
         }).catch(err => { res.json({ catch_msg: 'Unable to find user', err: err }); });
-    }
 });
+
 router.post('/remove', (req, res) => {
     res.type('json');
-
     sess = req.session;
-
     if (!sess.email)
         res.json({ msg: 'You are not connected' });
     else {
