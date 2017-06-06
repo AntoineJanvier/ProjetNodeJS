@@ -197,6 +197,33 @@ function check_decision(d) {
         return 'REJECTED';
 }
 
+router.get('/suggestions', (req, res) => {
+    res.type('json');
+    sess = req.session;
+    if (!sess.email)
+        res.json({ msg: 'Not connected...' });
+    else {
+        User.find({
+            where: { email: sess.email }
+        }).then(u => {
+            return Friend.findAll({
+                where: { user: u.userid, status: 'ACCEPTED' }
+            }).then(friends => {
+                let id_friends = [];
+                for (let i of friends)
+                    id_friends.push(i.fk_User)
+                return User.findAll({
+                    where: { userid: { $notIn: id_friends } }
+                }).then(suggested_users => {
+                    for (let u of suggested_users)
+                        u = u.responsify()
+                    res.json(suggested_users)
+                }).catch(err => { res.json({ msg: 'Not able to find users which are not friends', err: err }); });
+            }).catch(err => { res.json({ msg: 'Not able to find friends', err: err }); });
+        }).catch(err => { res.json({ msg: 'Not able to find the connected user', err: err }); })
+    }
+});
+
 /*router.post('/external_relationships/create',  (req, res) => {
     res.type('json');
     res.json({ msg: 'OK' });
