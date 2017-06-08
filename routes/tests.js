@@ -2,6 +2,7 @@
 
 const express = require('express');
 let router = express.Router();
+let passwordHash = require('password-hash');
 
 const models = require('../models');
 const User = models.User;
@@ -25,12 +26,12 @@ router.get('/fill_database', (req, res) => {
     /**
      * Generate Users
      */
-    User.create({first_name: 'tata', last_name: 'tata', age: 12, email: 'a@a.com', pwd: 'coucou' });
-    User.create({first_name: 'tete', last_name: 'tete', age: 12, email: 'e@e.com', pwd: 'coucou' });
-    User.create({first_name: 'titi', last_name: 'titi', age: 12, email: 'i@i.com', pwd: 'coucou' });
-    User.create({first_name: 'toto', last_name: 'toto', age: 12, email: 'o@o.com', pwd: 'coucou' });
-    User.create({first_name: 'tutu', last_name: 'tutu', age: 12, email: 'u@u.com', pwd: 'coucou' });
-    User.create({first_name: 'tyty', last_name: 'tyty', age: 12, email: 'y@y.com', pwd: 'coucou' });
+    User.create({first_name: 'tata', last_name: 'tata', age: 12, email: 'a@a.com', pwd: passwordHash.generate('coucou') });
+    User.create({first_name: 'tete', last_name: 'tete', age: 12, email: 'e@e.com', pwd: passwordHash.generate('coucou') });
+    User.create({first_name: 'titi', last_name: 'titi', age: 12, email: 'i@i.com', pwd: passwordHash.generate('coucou') });
+    User.create({first_name: 'toto', last_name: 'toto', age: 12, email: 'o@o.com', pwd: passwordHash.generate('coucou') });
+    User.create({first_name: 'tutu', last_name: 'tutu', age: 12, email: 'u@u.com', pwd: passwordHash.generate('coucou') });
+    User.create({first_name: 'tyty', last_name: 'tyty', age: 12, email: 'y@y.com', pwd: passwordHash.generate('coucou') });
 
     /**
      * Generate products
