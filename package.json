@@ -16,6 +16,7 @@
     "express-session": "^1.15.2",
     "morgan": "^1.8.2",
     "mysql": "^2.13.0",
+    "password-hash": "^1.2.2",
     "pug": "~2.0.0-beta10",
     "sequelize": "latest",
     "serve-favicon": "~2.3.2"

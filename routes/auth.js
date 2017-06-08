@@ -3,6 +3,7 @@
 let express = require('express');
 let router = express.Router();
 let session = require('express-session');
+let passwordHash = require('password-hash');
 
 const models = require('../models');
 const User = models.User;
@@ -15,7 +16,7 @@ router.post('/subscribe', (req, res) => {
         u_firstname = req.body.first_name,
         u_lastname = req.body.last_name,
         u_age = parseInt(req.body.age),
-        u_pwd = req.body.pwd;
+        u_pwd = passwordHash.generate(req.body.pwd);
     if(u_firstname && u_lastname && u_age && u_email && u_pwd) {
         User.find({
             attributes: ['email'], where: { email: u_email }
@@ -52,15 +53,18 @@ router.post('/log_in', (req, res) => {
             u_pwd = req.body.pwd;
         if(u_email && u_pwd) {
             User.find({
-                where: { 'email': u_email, 'pwd': u_pwd }
+                where: { 'email': u_email }
             }).then(user => {
                 if(user) {
-                    sess.userid = user.userid;
-                    sess.first_name = user.first_name;
-                    sess.last_name = user.last_name;
-                    sess.age = user.age;
-                    sess.email = user.email;
-                    res.json({ User: user.responsify(), Session: sess });
+                    if (passwordHash.verify(u_pwd, user.pwd)) {
+                        sess.userid = user.userid;
+                        sess.first_name = user.first_name;
+                        sess.last_name = user.last_name;
+                        sess.age = user.age;
+                        sess.email = user.email;
+                        res.json({ User: user.responsify(), Session: sess });
+                    } else
+                        res.json({ msg: 'Bad login input' });
                 } else
                     res.json({ msg: 'User not found' });
             }).catch(err => { res.json({ msg: 'User not found', err: err }); });
