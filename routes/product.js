@@ -321,12 +321,4 @@ router.get('/categories/list', (req, res) => {
         }).catch(err => { res.json({ msg: 'Unable to find categories', err: err }); });
 });
 
-/**
- * TODO : Know what to do with this route
- */
-router.get('/consumption', (req, res) => {
-    res.type('json');
-    res.json({ msg: 'ok' });
-});
-
 module.exports = router;

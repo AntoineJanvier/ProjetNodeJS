@@ -124,12 +124,4 @@ router.post('/edit_password', (req, res) => {
         res.json({ msg: 'Bad entry...' });
 });
 
-/**
- * IF WE HAVE TIME...
- */
-router.get('/facebook_connect', (req, res) => {
-    res.type('json');
-    res.json({ msg: 'ok' });
-});
-
 module.exports = router;

@@ -17,7 +17,6 @@ const routes = {
     auth: require('./routes/auth'),
     borrow: require('./routes/borrow'),
     friends: require('./routes/friends'),
-    personOfInterest: require('./routes/personOfInterest'),
     product: require('./routes/product'),
     timeline: require('./routes/timeline'),
     user: require('./routes/user'),
@@ -57,7 +56,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/auth', routes['auth']);
 app.use('/borrow', routes['borrow']);
 app.use('/friends', routes['friends']);
-app.use('/personOfInterest', routes['personOfInterest']);
 app.use('/product', routes['product']);
 app.use('/timeline', routes['timeline']);
 app.use('/user', routes['user']);

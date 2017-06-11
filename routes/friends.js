@@ -224,32 +224,4 @@ router.get('/suggestions', (req, res) => {
     }
 });
 
-/*router.post('/external_relationships/create',  (req, res) => {
-    res.type('json');
-    res.json({ msg: 'OK' });
-});
-
-router.post('/external_relationships/edit',  (req, res) => {
-    res.type('json');
-    res.json({ msg: 'OK' });
-});
-
-router.post('/external_relationships/remove',  (req, res) => {
-    res.type('json');
-    res.json({ msg: 'OK' });
-});
-
-router.post('/external_relationships/list',  (req, res) => {
-    res.type('json');
-    res.json({ msg: 'OK' });
-});*/
-
-/**
- * IF WE HAVE TIME...
- */
-router.post('/search_facebook',  (req, res) => {
-    res.type('json');
-    res.json({ msg: 'OK' });
-});
-
 module.exports = router;

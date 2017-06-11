@@ -142,32 +142,4 @@ router.get('/pending_request', (req, res) => {
         }).catch(err => { res.json({ catch_msg: 'Unable to find user', err: err }); });
 });
 
-router.get('/edit', (req, res) => {
-    res.type('json');
-    res.json({
-        msg: 'ok'
-    });
-});
-
-/*router.get('/reminder', (req, res) => {
-    res.type('json');
-    res.json({
-        msg: 'ok'
-    });
-});
-
-router.get('/external_relationships/create', (req, res) => {
-    res.type('json');
-    res.json({
-        msg: 'ok'
-    });
-});
-
-router.get('/external_relationships/edit', (req, res) => {
-    res.type('json');
-    res.json({
-        msg: 'ok'
-    });
-});*/
-
 module.exports = router;
